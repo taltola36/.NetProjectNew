@@ -13,7 +13,8 @@
 <script>
     var GuID;
     var size = 10;
-    var boardArr;
+    var boardArr, myJSON_Text, player, message;
+    var xmlHttp_loadBoard, xmlHttp_Register, xmlHttp_Process, xmlHttp_Unload;
 
     function setWindow() {
         window.moveTo(0, 0);
@@ -53,30 +54,50 @@
 
     function getResponse_Connect() {
         if (xmlHttp_Register.readyState == 4) {
-            GuID = xmlHttp_Register.responseText;
-            ProcessFunction();
+            myJSON_Text = xmlHttp_Register.responseText;
+            GuID = myJSON_Text.substr(0, myJSON_Text.length - 6);
+            message = eval(myJSON_Text.substr(myJSON_Text.length - 6));
+            setAlert();
+            if (message == "wait")
+                ProcessFunction();
+        }
+    }
+
+    function setAlert() {
+        if (message == "wait") {
+            document.getElementById("playerNameLabel").textContent = "First Player";
+            player = 1;
+            alert("Please wait for another player to join the game");
+        }
+        if (message == "play") {
+            document.getElementById("playerNameLabel").textContent = "Second Player";
+            player = 2;
+            alert("Play!");
             loadBoard();
         }
     }
 
     function loadBoard() {
-        var url = "Handler.ashx?cmd=loadBoard&guid=" + GuID;
-        xmlHttp_loadBoard.open("POST", url, true);
-        xmlHttp_loadBoard.onreadystatechange = onRequestLoadBoard;
-        xmlHttp_loadBoard.send();
+        if (xmlHttp_Process.readyState == 4 || player == 2) {
+            if (player == 1)
+                alert("Play!");
+
+            var url = "Handler.ashx?cmd=loadBoard&guid=" + GuID;
+            xmlHttp_loadBoard.open("POST", url, true);
+            xmlHttp_loadBoard.onreadystatechange = onRequestLoadBoard;
+            xmlHttp_loadBoard.send();
+        }
     }
 
     function onRequestLoadBoard() {
         if (xmlHttp_loadBoard.readyState == 4) {
             var myJSON_Text = xmlHttp_loadBoard.responseText;
-            var message = eval(myJSON_Text.substr(myJSON_Text.length - 6));
-            boardArr = eval(myJSON_Text.substr(0, myJSON_Text.length - 6));
-            initBoard(message);
-            ProcessFunction();
+            boardArr = eval(myJSON_Text);
+            initBoard();
         }
     }
 
-    function initBoard(message) {
+    function initBoard() {
         k = 0;
         for (var i = 0; i < size; i++) {
             for (var j = 0; j < size; j++) {
@@ -86,33 +107,41 @@
                 k++;
             }
         }
-
-        if (message == "wait") {
-            document.getElementById("playerNameLabel").textContent = "First Player";
-            alert("Please wait for another player to join the game");
-        }
-        else {
-            document.getElementById("playerNameLabel").textContent = "Second Player";
-            alert("Play!");
-        }
     }
 
     function ProcessFunction() {
         var url = "Handler.ashx?cmd=process&guid=" + GuID;
         xmlHttp_Process.open("POST", url, true);
-        xmlHttp_Process.onreadystatechange = canMoveClickedButton;
+        xmlHttp_Process.onreadystatechange = loadBoard;
         xmlHttp_Process.send();
     }
 
     function myUnLoad() {
         var url = "Handler.ashx?cmd=unregister&guid=" + GuID;
         xmlHttp_Unload.open("POST", url, true);
+        //xmlHttp_Unload.onreadystatechange = unregisterResponse; ~~~~~~~~~DO NOT DELETE~~~~~~~~~~
         xmlHttp_Unload.send();
     }
 
+    //function unregisterResponse() {
+    //    if (xmlHttp_Unload.readyState == 4) {
+    //        myJSON_Text = xmlHttp_Unload.responseText;
+    //        var messageEndGame = eval(myJSON_Text);
+    //        alert(messageEndGame);
+    //    }
+    //}
+
     function newGameClick() {
         clearBoards();
-        loadBoard();
+        if (boardArr == null) {
+            setAlert();
+        } else {
+            var url = "Handler.ashx?cmd=loadBoard&guid=" + GuID;
+            //alert(xmlHttp_Process.readyState);
+            xmlHttp_loadBoard.open("POST", url, true);
+            xmlHttp_loadBoard.onreadystatechange = onRequestLoadBoard;
+            xmlHttp_loadBoard.send();
+        }
     }
 
     function clearBoards() {
@@ -129,7 +158,7 @@
         //document.getElementById(sender.id).style.background = "rgb(25,100,175)";
     }
 
-    function canMoveClickedButton() {
+    function guessShipLocation() {
         if (xmlHttp_Process.readyState == 4) {
         }
     }
