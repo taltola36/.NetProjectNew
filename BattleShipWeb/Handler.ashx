@@ -31,7 +31,7 @@ public class Handler : IHttpAsyncHandler
                 myAsyncResult.CompleteRequest();
                 break;
             case "unregister":
-                AsyncServer.UnregisterClient(guid);
+                AsyncServer.UnregisterClient(myAsyncResult, guid);
                 myAsyncResult.CompleteRequest();
                 break;
             case "process":
