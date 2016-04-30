@@ -7,6 +7,7 @@ Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "BattleShipWeb", "http://loc
 	ProjectSection(WebsiteProperties) = preProject
 		UseIISExpress = "true"
 		TargetFrameworkMoniker = ".NETFramework,Version%3Dv4.5"
+		ProjectReferences = "{8D909A24-986A-4CBC-894B-718AC6314B64}|BattleShipModel.dll;"
 		Debug.AspNetCompiler.VirtualPath = "/localhost_54968"
 		Debug.AspNetCompiler.PhysicalPath = "BattleShipWeb\"
 		Debug.AspNetCompiler.TargetPath = "PrecompiledWeb\localhost_54968\"
@@ -24,6 +25,8 @@ Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "BattleShipWeb", "http://loc
 		SlnRelativePath = "BattleShipWeb\"
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BattleShipModel", "BattleShipModel\BattleShipModel.csproj", "{8D909A24-986A-4CBC-894B-718AC6314B64}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -34,6 +37,10 @@ Global
 		{0B195D5B-B9E1-4ED9-BF4D-B14BF323C0CD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0B195D5B-B9E1-4ED9-BF4D-B14BF323C0CD}.Release|Any CPU.ActiveCfg = Debug|Any CPU
 		{0B195D5B-B9E1-4ED9-BF4D-B14BF323C0CD}.Release|Any CPU.Build.0 = Debug|Any CPU
+		{8D909A24-986A-4CBC-894B-718AC6314B64}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8D909A24-986A-4CBC-894B-718AC6314B64}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8D909A24-986A-4CBC-894B-718AC6314B64}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8D909A24-986A-4CBC-894B-718AC6314B64}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

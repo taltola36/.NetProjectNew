@@ -6,13 +6,20 @@ using System.Web;
 using System.Web.UI.WebControls;
 using System.Drawing;
 using System.Web.Script.Serialization;
+using BattleShipModel;
 
 public class AsyncServer
 {
     private static Object _lock = new Object();
+    
+    /// <summary>
+    /// reg true is the first player
+    /// thread safe (volatile)
+    /// </summary>
     private static Dictionary<string, AsyncResult> _clientStateList = new Dictionary<string, AsyncResult>();
-    private static bool wait = false, registered = false; // reg true is the first player
-    private static ArrayList arr = new ArrayList();
+    //private static volatile bool wait = false, registered = false; 
+    private static volatile bool registered = false; 
+    //private static ArrayList arr = new ArrayList();
 
     public static void RegisterClient(AsyncResult state)
     {
@@ -61,11 +68,11 @@ public class AsyncServer
         //arr = new ArrayList();
         //for (int i = 0; i < arr.Count; i++)
         //{
-        //    if (((Game)arr[i]).getPlayer(1) != null && ((Game)arr[i]).getPlayer(1).getGuid().Equals(guid))
+        //    if (((Game)arr[i]).getPlayer(1) != null && ((Game)arr[i]).getPlayer(1).getGuid().Equals(playerId))
         //    {
         //        ((Game) arr[i]).removePlayer(1);
         //    }
-        //    if (((Game)arr[i]).getPlayer(2) != null && ((Game)arr[i]).getPlayer(2).getGuid().Equals(guid))
+        //    if (((Game)arr[i]).getPlayer(2) != null && ((Game)arr[i]).getPlayer(2).getGuid().Equals(playerId))
         //    {
         //        ((Game) arr[i]).removePlayer(2);
         //    }
@@ -93,14 +100,14 @@ public class AsyncServer
         }
     }
 
-    public static void LoadBoard(AsyncResult state, string guid)
+    public static void LoadBoard(AsyncResult state, string playerId)
     {
         //if (wait)
-        //    arr.Add(new Game(guid));
+        //    arr.Add(new Game(playerId));
         //else
-        //    ((Game)arr[0]).addPlayer(guid);
+        //    ((Game)arr[0]).addPlayer(playerId);
 
-        //Board b = ((Game)arr[0]).getBoardOfPlayer(guid);
+        //Board b = ((Game)arr[0]).getBoardOfPlayer(playerId);
         //JavaScriptSerializer myJavaScriptSerializer = new JavaScriptSerializer();
         //string resultStr = myJavaScriptSerializer.Serialize(b.getBoardArr());
         //state._context.Response.Write(resultStr);
@@ -110,22 +117,21 @@ public class AsyncServer
         //    resultStr = myJavaScriptSerializer.Serialize("play");        
         //state._context.Response.Write(resultStr);
 
-        Board b;
-        wait = !wait;
-        //if (((Game)arr[0]).)
-        if (arr.Count != 0 && ((Game)arr[0]).getNumberofPlayers() == 2)
-            b = ((Game)arr[0]).createNewBoard(guid);
-        else
-        {
-            if (wait)
-                arr.Add(new Game(guid));
-            else
-                ((Game)arr[0]).addPlayer(guid);
-            b = ((Game)arr[0]).getBoardOfPlayer(guid);
-        }
+        Board b = GameManager.LoadBoard(playerId);
+        //wait = !wait;
+        //if (arr.Count != 0 && ((Game)arr[0]).getNumberofPlayers() == 2)
+        //    b = ((Game)arr[0]).createNewBoard(playerId);
+        //else
+        //{
+        //    if (wait)
+        //        arr.Add(new Game(playerId));
+        //    else
+        //        ((Game)arr[0]).addPlayer(playerId);
+        //    b = ((Game)arr[0]).getBoardOfPlayer(playerId);
+        //}
 
         JavaScriptSerializer myJavaScriptSerializer = new JavaScriptSerializer();
-        string resultStr = myJavaScriptSerializer.Serialize(b.getBoardArr());
+        string resultStr = myJavaScriptSerializer.Serialize(b.BoardArray);
 
         state._context.Response.Write(resultStr);
         updateWaitingClient(state, resultStr);

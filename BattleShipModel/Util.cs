@@ -4,9 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BattleShips
+namespace BattleShipModel
 {
-    public class Class1
+    public class Util
     {
+        public const int BoardSize = 10;
     }
 }

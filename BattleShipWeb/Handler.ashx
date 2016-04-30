@@ -21,7 +21,7 @@ public class Handler : IHttpAsyncHandler
     {
         AsyncResult myAsyncResult = obj as AsyncResult;
         string command = myAsyncResult._context.Request.QueryString["cmd"];
-        string guid = myAsyncResult._context.Request.QueryString["guid"];
+        string guid = myAsyncResult._context.Request.QueryString["playerId"];
         string JsonString_0 = "", JsonString_1 = "";
         JavaScriptSerializer myJavaScriptSerializer = new JavaScriptSerializer();
         switch (command)

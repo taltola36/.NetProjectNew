@@ -82,7 +82,7 @@
             if (player == 1)
                 alert("Play!");
 
-            var url = "Handler.ashx?cmd=loadBoard&guid=" + GuID;
+            var url = "Handler.ashx?cmd=loadBoard&playerId=" + GuID;
             xmlHttp_loadBoard.open("POST", url, true);
             xmlHttp_loadBoard.onreadystatechange = onRequestLoadBoard;
             xmlHttp_loadBoard.send();
@@ -110,14 +110,14 @@
     }
 
     function ProcessFunction() {
-        var url = "Handler.ashx?cmd=process&guid=" + GuID;
+        var url = "Handler.ashx?cmd=process&playerId=" + GuID;
         xmlHttp_Process.open("POST", url, true);
         xmlHttp_Process.onreadystatechange = loadBoard;
         xmlHttp_Process.send();
     }
 
     function myUnLoad() {
-        var url = "Handler.ashx?cmd=unregister&guid=" + GuID;
+        var url = "Handler.ashx?cmd=unregister&playerId=" + GuID;
         xmlHttp_Unload.open("POST", url, true);
         //xmlHttp_Unload.onreadystatechange = unregisterResponse; ~~~~~~~~~DO NOT DELETE~~~~~~~~~~
         xmlHttp_Unload.send();
@@ -136,7 +136,7 @@
         if (boardArr == null) {
             setAlert();
         } else {
-            var url = "Handler.ashx?cmd=loadBoard&guid=" + GuID;
+            var url = "Handler.ashx?cmd=loadBoard&playerId=" + GuID;
             //alert(xmlHttp_Process.readyState);
             xmlHttp_loadBoard.open("POST", url, true);
             xmlHttp_loadBoard.onreadystatechange = onRequestLoadBoard;
