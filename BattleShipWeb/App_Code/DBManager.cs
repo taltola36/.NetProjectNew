@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
@@ -14,7 +15,10 @@ public class DBManager
 
     private static string GetRandStructerBoard()
     {
+
+        ArrayList structures = new ArrayList();
         string retStruct = "";
+        int rows = 0;
 
         SqlConnection con = new SqlConnection(connectionString);
         string sql = "select * from Board";
@@ -22,13 +26,23 @@ public class DBManager
 
         SqlCommand cmd = new SqlCommand(sql, con);
         SqlDataReader dr = cmd.ExecuteReader();
-
         while (dr.Read())
         {
-            retStruct = dr["Structure_Board"].ToString();
+            rows++;
+            structures.Add(dr["Structure_Board"].ToString());
         }
 
-        return retStruct;
+        Random rndNum = new Random();
+        int num;
+        num = rndNum.Next(0, rows + 1);
+        string[] structuresArr = new string[rows];
+
+        for (int i = 0; i < structures.Count; i++)
+        {
+            structuresArr[i] = (string) structures[i];
+        }
+
+        return structuresArr[num] ;
     }
 
     public static Board GetNewBoard()
