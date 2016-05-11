@@ -13,11 +13,10 @@ namespace BattleShipModel
             this.ID = guid;
         }
 
+        public int numberOfHits { get; set; }
+
         public Board Board { get; set; }
 
-        /// <summary>
-        /// The GUID ID for the player
-        /// </summary>
         public string ID { get; set; }
 
     }
