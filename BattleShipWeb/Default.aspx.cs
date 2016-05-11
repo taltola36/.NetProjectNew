@@ -21,12 +21,15 @@ public partial class _Default : System.Web.UI.Page
         if (!IsPostBack)
         {
             setLabel("Battleship Game", "battleshipGameLabel", 0, 5);
-            setLabel("Player Name", "playerNameLabel", 0, 980);
+            setLabel("", "playerNameLabel", 0, 980);
+            setLabel("", "pairNameLabel", 17, 980);
+            setLabel("", "messages", 34, 420);
             setLabel("Your battleships", "YourBattleshipsLabel", (size + 4) * buttonSize, (size / 2 + 3) * buttonSize);
             setLabel("Enemy battleships", "enemyBattleshipsLabel", (size + 4) * buttonSize, (size + size + 3) * buttonSize);
             setBoard(leftBoard, linePosLeft, "disabled");
-            setBoard(rightBoard, linePosRight, "");
-            setButton("New Game", buttonSize, 5);
+            setBoard(rightBoard, linePosRight, "disabled");
+            //setButton("New Game", buttonSize, 5); no need for now. when clicking the button need to pair to another player.
+            //maybe add it after closing window works.
         }
     }
 
@@ -65,9 +68,10 @@ public partial class _Default : System.Web.UI.Page
         Label myLabel = new Label();
         myLabel.Text = text;
         myLabel.ID = id;
-        myLabel.Style.Add("width", "5");
-        myLabel.Style.Add("height", "5");
+        myLabel.Style.Add("width", "7");
+        myLabel.Style.Add("height", "7");
         myLabel.Style.Add("font-style", "david");
+        myLabel.Style.Add("font-size", "105%");
         myLabel.Style.Add("position", "absolute");
         myLabel.Style.Add("top", top.ToString() + "px");
         myLabel.Style.Add("left", left.ToString() + "px");
@@ -82,7 +86,7 @@ public partial class _Default : System.Web.UI.Page
             setLabel((i + 1).ToString(),"label", top, linePos-buttonSize);
             for (int j = 0; j < size; j++)
             {
-                if (buttonArr == leftBoard)
+                //if (buttonArr == leftBoard)
                     buttonArr[i, j].Attributes.Add("disabled", "disabled");
                 setLabel(letterArr[j], "label", buttonSize*2, linePos + 10);
                 buttonArr[i, j].Width = buttonArr[i, j].Height = buttonSize;
