@@ -19,6 +19,8 @@ namespace BattleShipModel
 
         public string Struct { get; set; }
 
+        public int numberOfShipsParts { get; set; }
+
         public int[][] BoardArray { get; set; }
 
     }
