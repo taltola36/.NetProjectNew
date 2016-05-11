@@ -24,7 +24,7 @@ public class AsyncServer
         
         JavaScriptSerializer myJavaScriptSerializer = new JavaScriptSerializer();
 
-        //resylt is guid and labels info (number of pair and player)
+        //result is guid and labels info (number of pair and player)
         locResult result = GameManager.RegisterClient(state.ClientGuid);
 
         if (result.boardName.Equals("secondPlayer"))
