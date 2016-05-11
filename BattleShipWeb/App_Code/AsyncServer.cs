@@ -11,73 +11,76 @@ using BattleShipModel;
 public class AsyncServer
 {
     private static Object _lock = new Object();
-    
-    /// <summary>
-    /// reg true is the first player
-    /// thread safe (volatile)
-    /// </summary>
     private static Dictionary<string, AsyncResult> _clientStateList = new Dictionary<string, AsyncResult>();
-    //private static volatile bool wait = false, registered = false; 
-    private static volatile bool registered = false; 
-    //private static ArrayList arr = new ArrayList();
 
     public static void RegisterClient(AsyncResult state)
     {
-        JavaScriptSerializer myJavaScriptSerializer = new JavaScriptSerializer();
-        string resultStr;
-        registered = !registered; 
         lock (_lock)
         {
             state.ClientGuid = Guid.NewGuid().ToString();
             _clientStateList.Add(state.ClientGuid, state);
-            state._context.Response.Write(state.ClientGuid.ToString());
+        }
+        int numberOfPlayer1 = 0, numberOfPlayer2;
+        
+        JavaScriptSerializer myJavaScriptSerializer = new JavaScriptSerializer();
+
+        //resylt is guid and labels info (number of pair and player)
+        locResult result = GameManager.RegisterClient(state.ClientGuid);
+
+        if (result.boardName.Equals("secondPlayer"))
+        {
+            numberOfPlayer2 = getSecondPlayerIndex(state);
+            if (numberOfPlayer2 % 2 == 0)
+                numberOfPlayer1 = numberOfPlayer2 - 1;
+            else
+                numberOfPlayer1 = numberOfPlayer2 + 1;
+            
+            updateOtherPlayer("", numberOfPlayer1, 0);
         }
 
-        if (registered)
-            resultStr = myJavaScriptSerializer.Serialize("wait");
-        else
-        {
-            resultStr = myJavaScriptSerializer.Serialize("play");
-            updateWaitingClient(state, resultStr);
-        }
+        string resultStr = myJavaScriptSerializer.Serialize(result);
         state._context.Response.Write(resultStr);
     }
 
-    public static void updateWaitingClient(AsyncResult state, string resultStr)
+    public static int getSecondPlayerIndex(AsyncResult state)
     {
+        int numberOfPlayer2 = 0;
         lock (_lock)
         {
             foreach (AsyncResult clientState in _clientStateList.Values)
             {
-                if (clientState._context.CurrentHandler != null && !state.ClientGuid.Equals(clientState.ClientGuid))
-                {
-                    clientState._context.Response.Write(resultStr);
-                    clientState.CompleteRequest();
-                }
+                numberOfPlayer2++;
+                if (clientState._context.CurrentHandler != null && state.ClientGuid != null && state.ClientGuid.Equals(clientState.ClientGuid))
+                    break;
             }
         }
+        return numberOfPlayer2;
     }
 
     public static void UnregisterClient(AsyncResult state, String guid)
     {
         string resultStr;
         JavaScriptSerializer myJavaScriptSerializer = new JavaScriptSerializer();
+        //GameManager.RemoveClient(guid);
+        //List<Game> l = GameManager.retArr();
+        //make sure that the remaining player gets a message to wait(like in register) and to activate loadBoard
 
-        //wait = false;
-        //registered = false;
-        //arr = new ArrayList();
-        //for (int i = 0; i < arr.Count; i++)
+        //resultStr = myJavaScriptSerializer.Serialize("play");
+        //updateWaitingClient(state, resultStr);
+        //state._context.Response.Write(resultStr);
+        //resultStr = myJavaScriptSerializer.Serialize("Please wait for another player to join the game");
+
+        //lock (_lock)
         //{
-        //    if (((Game)arr[i]).getPlayer(1) != null && ((Game)arr[i]).getPlayer(1).getGuid().Equals(playerId))
+        //    foreach (AsyncResult clientState in _clientStateList.Values)
         //    {
-        //        ((Game) arr[i]).removePlayer(1);
+        //        if (!guid.Equals(clientState.ClientGuid))
+        //        {
+        //            clientState._context.Response.Write(resultStr);
+        //            clientState.CompleteRequest();
+        //            break;
+        //        }
         //    }
-        //    if (((Game)arr[i]).getPlayer(2) != null && ((Game)arr[i]).getPlayer(2).getGuid().Equals(playerId))
-        //    {
-        //        ((Game) arr[i]).removePlayer(2);
-        //    }
-        //    resultStr = myJavaScriptSerializer.Serialize("The other player left. Would you like to play again?");
-        //    updateWaitingClient(state, resultStr);
         //}
         lock (_lock)
         {
@@ -100,41 +103,112 @@ public class AsyncServer
         }
     }
 
-    public static void LoadBoard(AsyncResult state, string playerId)
+    public static void LoadBoard(AsyncResult state, string playerId, string playerNumber)
     {
-        //if (wait)
-        //    arr.Add(new Game(playerId));
-        //else
-        //    ((Game)arr[0]).addPlayer(playerId);
-
-        //Board b = ((Game)arr[0]).getBoardOfPlayer(playerId);
-        //JavaScriptSerializer myJavaScriptSerializer = new JavaScriptSerializer();
-        //string resultStr = myJavaScriptSerializer.Serialize(b.getBoardArr());
-        //state._context.Response.Write(resultStr);
-        //if (wait)
-        //    resultStr = myJavaScriptSerializer.Serialize("wait");
-        //else
-        //    resultStr = myJavaScriptSerializer.Serialize("play");        
-        //state._context.Response.Write(resultStr);
-
-        Board b = GameManager.LoadBoard(playerId);
-        //wait = !wait;
-        //if (arr.Count != 0 && ((Game)arr[0]).getNumberofPlayers() == 2)
-        //    b = ((Game)arr[0]).createNewBoard(playerId);
-        //else
-        //{
-        //    if (wait)
-        //        arr.Add(new Game(playerId));
-        //    else
-        //        ((Game)arr[0]).addPlayer(playerId);
-        //    b = ((Game)arr[0]).getBoardOfPlayer(playerId);
-        //}
+        Board b = GameManager.LoadBoard(playerId, playerNumber);
 
         JavaScriptSerializer myJavaScriptSerializer = new JavaScriptSerializer();
         string resultStr = myJavaScriptSerializer.Serialize(b.BoardArray);
-
         state._context.Response.Write(resultStr);
-        updateWaitingClient(state, resultStr);
+        
+        //updateWaitingClient(state, resultStr);
+    }
 
-    }   
+    //public static void updateWaitingClient(AsyncResult state, string resultStr)
+    //{
+    //    lock (_lock)
+    //    {
+    //        foreach (AsyncResult clientState in _clientStateList.Values)
+    //        {
+    //            if (clientState._context.CurrentHandler != null && state.ClientGuid != null && state.ClientGuid.Equals(clientState.ClientGuid))
+    //            {
+    //                clientState._context.Response.Write(resultStr);
+    //                clientState.CompleteRequest();
+    //            }
+    //        }
+    //    }
+    //}
+
+    public static void MakeMove(AsyncResult state, string playerId, string indexes)
+    {
+        int numberOfPlayer1 = 0, numberOfPlayer2;
+        JavaScriptSerializer myJavaScriptSerializer = new JavaScriptSerializer();
+        string resultStr;
+
+        locResult result = GameManager.MakeMove(playerId, indexes);
+
+        if (result == null) //It is not this player's turn
+        {
+            resultStr = myJavaScriptSerializer.Serialize("Please wait for your turn");
+            state._context.Response.Write(resultStr);
+
+            //complete request for client that it is not his turn
+            updatePlayerMove(resultStr, playerId);
+        }
+        if (result != null)
+        {
+            if (result.boardName.Equals("w"))
+                result.isHit = "Game over! You won";
+            resultStr = myJavaScriptSerializer.Serialize(result);
+            state._context.Response.Write(resultStr);   //send data to xmlHttp_MakeMove
+            numberOfPlayer1 = updatePlayerMove(resultStr, playerId);    //send data to xmlHttp_MakeMoveProcess
+
+            if (numberOfPlayer1 % 2 == 0)
+                numberOfPlayer2 = numberOfPlayer1 - 1;
+            else
+                numberOfPlayer2 = numberOfPlayer1 + 1;
+
+            //prepare data to the player who didn't clicked
+            if (result.boardName.Equals("w"))
+                result.isHit = "Game over! You lost";
+            if (result.boardName.Equals("r"))
+                result.boardName = "l";
+
+            //send data to the player who didn't clicked
+            resultStr = myJavaScriptSerializer.Serialize(result);
+            updateOtherPlayer(resultStr, numberOfPlayer2, 1);
+        }
+    }
+
+    public static int updatePlayerMove(string resultStr, string playerId)
+    {
+        int numberOfPlayer1 = 0;
+        lock (_lock)
+        {
+            foreach (AsyncResult clientState in _clientStateList.Values)
+            {
+                numberOfPlayer1++;
+                if (playerId.Equals(clientState.ClientGuid))
+                {
+                    clientState._context.Response.Write(resultStr);
+                    clientState.CompleteRequest();
+                    break;
+                }
+            }
+        }
+        return numberOfPlayer1;
+    }
+
+    public static void updateOtherPlayer(string resultStr, int numberOfPlayer2, int sendData)
+    {
+        //sendData = 0 only completeRequest for xmlHttp_ProcessLoadBoard for the first player who waited for second to connect
+        //sendData = 1 send button data for player who didn't make the move
+
+        int count = 0;
+        lock (_lock)
+        {
+            foreach (AsyncResult clientState in _clientStateList.Values)
+            {
+                count++;
+                if (count == numberOfPlayer2)
+                {
+                    if (sendData == 1)
+                        clientState._context.Response.Write(resultStr);
+                    clientState.CompleteRequest();
+                    break;
+                }
+            }
+        }
+    }
+
 }
