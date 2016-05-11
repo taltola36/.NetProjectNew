@@ -11,7 +11,7 @@ using System.Drawing;
 public class Handler : IHttpAsyncHandler
 {
     public IAsyncResult BeginProcessRequest(HttpContext ctx, AsyncCallback cb, Object obj)
-    {
+        {
         AsyncResult currentAsyncState = new AsyncResult(ctx, cb, obj);
         ThreadPool.QueueUserWorkItem(new WaitCallback(RequestWorker), currentAsyncState); 
         return currentAsyncState;
@@ -22,8 +22,10 @@ public class Handler : IHttpAsyncHandler
         AsyncResult myAsyncResult = obj as AsyncResult;
         string command = myAsyncResult._context.Request.QueryString["cmd"];
         string guid = myAsyncResult._context.Request.QueryString["playerId"];
-        string JsonString_0 = "", JsonString_1 = "";
+        string indexes = myAsyncResult._context.Request.QueryString["indexes"];
+        string playerNumber = myAsyncResult._context.Request.QueryString["playerNumber"];  
         JavaScriptSerializer myJavaScriptSerializer = new JavaScriptSerializer();
+        
         switch (command)
         {
             case "register":
@@ -39,7 +41,11 @@ public class Handler : IHttpAsyncHandler
                     AsyncServer.UpdateClient(myAsyncResult, guid);
                 break;
             case "loadBoard":
-                AsyncServer.LoadBoard(myAsyncResult, guid);
+                AsyncServer.LoadBoard(myAsyncResult, guid, playerNumber);
+                myAsyncResult.CompleteRequest();
+                break;
+            case "makeMove":
+                AsyncServer.MakeMove(myAsyncResult, guid, indexes);
                 myAsyncResult.CompleteRequest();
                 break;
         }
