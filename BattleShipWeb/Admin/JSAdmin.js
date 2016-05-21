@@ -21,7 +21,7 @@ function newXmlHttpReq() {
 
 function buttonAddClick() {
     for (var i = 1; i <= 100; i++) {
-        checkBox[i] = document.getElementById("CheckBox" + i);
+        checkBox[i] = document.getElementById("ContentPlaceHolder1_CheckBox" + i);
     }
     var board = "[[";
 
