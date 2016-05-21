@@ -10,10 +10,10 @@ public partial class Admin_AdminAdd : System.Web.UI.Page
 {
     private Button add = new Button();
 
-    private const string connectionString = "server=TALBENAMI\\SQLEXPRESS;" +
+    private const string connectionString = "server=AVITALHOVAV\\SQLEXPRESS;" +
                                         "uid=root;" +
                                         "pwd=root; database=.NetProject";
-
+    
     protected void Page_Load(object sender, EventArgs e)
     {
         ButtonAddBoard.Attributes.Add("onclick", "buttonAddClick(this);return false");
