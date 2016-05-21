@@ -8,12 +8,13 @@
 </head>
 <body>
     <form id="form1" runat="server">
+        <asp:HiddenField ID="GuID" runat="server" />        
     </form>
 </body>
 <script>
     var GuID;
     var size = 10;
-    var boardArr, myJSON_Text, player, senderButton, pairNumber;
+    var boardArr, myJSON_Text, player, senderButton, pairNumber, numberOfSubmarinesLeft, numberOfAllSubmarines, gameOver = false;
     var xmlHttp_loadBoard, xmlHttp_Register, xmlHttp_ProcessLoadBoard, xmlHttp_ProcessClose, xmlHttp_Unload, xmlHttp_MakeMove, xmlHttp_MakeMoveProcess;
 
     function setWindow() {
@@ -63,15 +64,11 @@
             myJSON_Text = xmlHttp_Register.responseText;
             var result = eval("(" + myJSON_Text + ")");
             GuID = result.indexes;
+            document.getElementById("GuID").value = GuID;
+            sessionStorage.setItem("guid", GuID);
             pairNumber = result.isHit;
             player = result.boardName;
             loadBoard();
-
-            //maybe it should be here so player2 sends request for move before player1 begins. change if there's exception again
-            //if (player == "secondPlayer") {
-            //    ProcessFunctionMakeMove();
-            //    setMessage("Please wait while the other player makes a move", "red", "370px");
-            //}
         }
     }
 
@@ -88,10 +85,13 @@
 
     function onRequestLoadBoard() {
         if (xmlHttp_loadBoard.readyState == 4) {
-            boardArr = eval(xmlHttp_loadBoard.responseText);
+            var result = eval("(" + xmlHttp_loadBoard.responseText + ")");
+            boardArr = result.boardArr;
+            numberOfSubmarinesLeft = result.numberOfSubmarinesLeft;
+            numberOfAllSubmarines = result.numberOfAllSubmarines;
             initBoard();
-            //ProcessFunctionClose();
             setLabels();
+            //ProcessFunctionClose();
 
             if (player == "secondPlayer")
                 ProcessFunctionMakeMove();
@@ -131,15 +131,20 @@
         if (player == "firstPlayer") {
             document.getElementById("playerNameLabel").textContent = "First Player";
             document.getElementById("pairNameLabel").textContent = "Pair Number " + pairNumber;
+            document.getElementById("SubsNumber").textContent = "Submarines left: " + numberOfSubmarinesLeft +"/" + numberOfAllSubmarines;
+
             document.getElementById("playerNameLabel").style.backgroundColor = "orange";
             document.getElementById("pairNameLabel").style.backgroundColor = "orange";
+            document.getElementById("SubsNumber").style.backgroundColor = "orange";
             alert("Please wait for another player to join the game");
         }
         if (player == "secondPlayer") {
             document.getElementById("playerNameLabel").textContent = "Second Player";
             document.getElementById("pairNameLabel").textContent = "Pair Number " + pairNumber;
+            document.getElementById("SubsNumber").textContent = "Submarines left: " + numberOfSubmarinesLeft + "/" + numberOfAllSubmarines;
             document.getElementById("playerNameLabel").style.backgroundColor = "green";
             document.getElementById("pairNameLabel").style.backgroundColor = "green";
+            document.getElementById("SubsNumber").style.backgroundColor = "green";
             setMessage("Please wait while the other player makes a move", "red", "370px");
         }
     }
@@ -152,45 +157,38 @@
     }
 
     function ProcessFunctionLoadBoard() {
-        var url = "Handler.ashx?cmd=process&playerId=" + GuID;
+        var url = "Handler.ashx?cmd=process1&playerId=" + GuID;
         xmlHttp_ProcessLoadBoard.open("POST", url, true);
         xmlHttp_ProcessLoadBoard.onreadystatechange = continueFirstPlayer;
         xmlHttp_ProcessLoadBoard.send();
     }
 
     function ProcessFunctionClose() {
-        var url = "Handler.ashx?cmd=process&playerId=" + GuID;
+        var url = "Handler.ashx?cmd=process2&playerId=" + GuID;
         xmlHttp_ProcessClose.open("POST", url, true);
         xmlHttp_ProcessClose.onreadystatechange = myUnLoad;
         xmlHttp_ProcessClose.send();
     }
 
     function ProcessFunctionMakeMove() {
-        var url = "Handler.ashx?cmd=process&playerId=" + GuID;
+        var url = "Handler.ashx?cmd=process1&playerId=" + GuID;
         xmlHttp_MakeMoveProcess.open("POST", url, true);
         xmlHttp_MakeMoveProcess.onreadystatechange = makeMoveResponse;
         xmlHttp_MakeMoveProcess.send();
     }
 
     function myUnLoad() {
-        //if (xmlHttp_ProcessClose != null) {
-        //    if (xmlHttp_ProcessClose.readyState == 4) {
-                var url = "Handler.ashx?cmd=unregister&playerId=" + GuID;
-                xmlHttp_Unload.open("POST", url, true);
-          //      xmlHttp_Unload.onreadystatechange = unregisterResponse;
-                xmlHttp_Unload.send();
-                //player1 closes and sends request. need to make player2 send request as well so he recieves message to wait.
-            //}
-        //}
+        if (xmlHttp_ProcessClose.readyState == 4) {
+            myJSON_Text = xmlHttp_Unload.responseText;
+
+            //never reaches this part. why???
+        }
     }
 
-    function unregisterResponse() {
-        if (xmlHttp_Unload.readyState == 4) {
-            myJSON_Text = xmlHttp_Unload.responseText;
-            //var messageEndGame = eval(myJSON_Text);
-            //alert(messageEndGame);
-            //alert("Please wait for another player to join the game");
-        }
+    function windowClosed() {
+        var url = "Handler.ashx?cmd=unregister&playerId=" + GuID;
+        xmlHttp_Unload.open("POST", url, true);
+        xmlHttp_Unload.send();
     }
 
     //function newBoardClick() {
@@ -212,16 +210,6 @@
         }
     }
 
-    function buttonClick(sender) {
-        if (document.getElementById(sender.id).style.backgroundColor != "red"
-            && document.getElementById(sender.id).style.backgroundColor != "green") {
-            senderButton = sender;
-            var url = "Handler.ashx?cmd=makeMove&playerId=" + GuID + "&indexes=" + senderButton.id;
-            xmlHttp_MakeMove.open("POST", url, true);
-            xmlHttp_MakeMove.send();
-        }
-    }
-
     function locResult(indexes, boardName, isHit) {
         this.indexes = indexes;
         this.boardName = boardName;
@@ -233,6 +221,17 @@
         document.getElementById("messages").style.backgroundColor = null;
     }
 
+    function buttonClick(sender) {
+        if (document.getElementById(sender.id).style.backgroundColor != "red"
+            && document.getElementById(sender.id).style.backgroundColor != "green"
+            && !gameOver) {
+            senderButton = sender;
+            var url = "Handler.ashx?cmd=makeMove&playerId=" + GuID + "&indexes=" + senderButton.id;
+            xmlHttp_MakeMove.open("POST", url, true);
+            xmlHttp_MakeMove.send();
+        }
+    }
+
     function makeMoveResponse() {
         if (xmlHttp_MakeMoveProcess.readyState == 4) {
             myJSON_Text = xmlHttp_MakeMoveProcess.responseText;
@@ -240,22 +239,27 @@
             //result is either button info or a message to wait for player's turn
 
             if (myJSON_Text.substr(1, 6) != "Please" && result != "") {
-
                 removeMessages();
                 if (result.boardName == "w" && result.isHit == "Game over! You won") {
                     document.getElementById(result.indexes).style.backgroundColor = "green";
+                    gameOver = true;
+                    alert(result.isHit);
                 }
 
                 if (result.boardName == "w" && result.isHit == "Game over! You lost") {
                     document.getElementById((size * size + Number(result.indexes)).toString()).style.backgroundColor = "green";
+                    gameOver = true;
+                    alert(result.isHit);
                 }
 
                 if (result.isHit == "1" && result.boardName == "r") {
                     document.getElementById(result.indexes).style.backgroundColor = "green";
+                    document.getElementById("SubsNumber").textContent = "Submarines left: " + result.submarinesLeft + "/" + numberOfAllSubmarines;
                 }
 
                 if (result.isHit == "0" && result.boardName == "r") {
                     document.getElementById(result.indexes).style.backgroundColor = "red";
+                    document.getElementById("SubsNumber").textContent = "Submarines left: " + result.submarinesLeft + "/" + numberOfAllSubmarines;
                 }
 
                 if (result.isHit == "1" && result.boardName == "l") {
@@ -274,7 +278,7 @@
     }
 
     window.onload = setWindow;
-    window.onbeforeunload = myUnLoad;
+    window.onclose = windowClosed;
 
 </script>
 </html>
