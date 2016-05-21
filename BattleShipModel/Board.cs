@@ -19,8 +19,6 @@ namespace BattleShipModel
 
         public string Struct { get; set; }
 
-        public int numberOfShipsParts { get; set; } //get from database (save in board table maybe?)
-
         public int[][] BoardArray { get; set; }
 
     }
