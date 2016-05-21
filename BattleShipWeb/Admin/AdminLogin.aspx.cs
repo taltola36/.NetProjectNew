@@ -9,7 +9,7 @@ using System.Configuration;
 
 public partial class Admin : System.Web.UI.Page
 {
-    private const string connectionString = "server=TALBENAMI\\SQLEXPRESS;" +
+    private const string connectionString = "server=AVITALHOVAV\\SQLEXPRESS;" +
                                             "uid=root;" +
                                             "pwd=root; database=.NetProject";
 
