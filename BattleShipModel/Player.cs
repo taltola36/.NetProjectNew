@@ -15,6 +15,8 @@ namespace BattleShipModel
 
         public int numberOfHits { get; set; }
 
+        public int numberOfSubmarines { get; set; }
+
         public Board Board { get; set; }
 
         public string ID { get; set; }
