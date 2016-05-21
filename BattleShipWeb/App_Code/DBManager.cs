@@ -34,7 +34,7 @@ public class DBManager
 
         Random rndNum = new Random();
         int num;
-        num = rndNum.Next(0, rows + 1);
+        num = rndNum.Next(0, rows);
         string[] structuresArr = new string[rows];
 
         for (int i = 0; i < structures.Count; i++)
@@ -55,5 +55,15 @@ public class DBManager
         retBoard.BoardArray = structArr;
 
         return retBoard;
+    }
+
+    public void WriteMove(string player, int indexHit, bool hit)
+    {
+        
+    }
+
+    public void AddPlayerData(string player, bool isWin)
+    {
+        
     }
 }
