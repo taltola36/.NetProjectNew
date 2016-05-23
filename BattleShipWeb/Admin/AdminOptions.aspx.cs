@@ -9,6 +9,21 @@ public partial class Admin_AdminOptions : System.Web.UI.Page
 {
     protected void Page_Load(object sender, EventArgs e)
     {
-
+        if (!IsLoggedIn())
+        {
+            var url = Request.Url.LocalPath;
+            Response.Redirect("AdminLogin.aspx?urlback=" + url);
+        }
     }
+
+    private bool IsLoggedIn()
+    {
+        if (Session["adminToken"] != null)
+        {
+            return true;
+        }
+
+        return false;
+    }
+
 }

@@ -31,6 +31,22 @@ public partial class _Default : System.Web.UI.Page
             //setButton("New Game", buttonSize, 5); no need for now. when clicking the button need to pair to another player.
             //maybe add it after closing window works.
         }
+
+        if (!IsLoggedIn())
+        {
+            var url = Request.Url.LocalPath;
+            Response.Redirect("LoginPage.aspx");
+        }
+    }
+
+    private bool IsLoggedIn()
+    {
+        if (Session["UserToken"] != null)
+        {
+            return true;
+        }
+
+        return false;
     }
 
     protected void Page_Init(object sender, EventArgs e)

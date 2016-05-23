@@ -6,12 +6,10 @@ var xmlHttp_addBoard;
 function newXmlHttpReq() {
     try {
         xmlHttp_addBoard = new ActiveXObject("Microsoft.XMLHTTP");
-        //xmlHttp_Process = new ActiveXObject("Microsoft.XMLHTTP");
     }
     catch (e) {
         try {
             xmlHttp_addBoard = new XMLHttpRequest();
-            //xmlHttp_Process = new XMLHttpRequest();
         }
         catch (e) {
             alert("Error");
@@ -21,7 +19,7 @@ function newXmlHttpReq() {
 
 function buttonAddClick() {
     for (var i = 1; i <= 100; i++) {
-        checkBox[i] = document.getElementById("CheckBox" + i);
+        checkBox[i] = document.getElementById("ContentPlaceHolder1_CheckBox" + i);
     }
     var board = "[[";
 
