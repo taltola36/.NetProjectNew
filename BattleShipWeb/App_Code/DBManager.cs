@@ -57,12 +57,12 @@ public class DBManager
         return retBoard;
     }
 
-    public void WriteMove(string player, int indexHit, bool hit)
+    public static void WriteMove(string player, int indexHit, bool hit)
     {
-        
+           
     }
 
-    public void AddPlayerData(string player, bool isWin)
+    public static void AddPlayerData(string player, bool isWin)
     {
         
     }
