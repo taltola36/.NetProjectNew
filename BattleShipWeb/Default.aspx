@@ -94,7 +94,7 @@
             initBoard();
             setLabels();
 
-            //ProcessFunctionClose();
+            ProcessFunctionClose();
             if (player == "secondPlayer" || (player == "firstPlayer" && !wait))
                 ProcessFunctionMakeMove();
             if (player == "firstPlayer" && wait)
@@ -196,7 +196,7 @@
     function windowClosed() {
         var url = "Handler.ashx?cmd=unregister&playerId=" + GuID;
         xmlHttp_Unload.open("POST", url, true);
-        xmlHttp_Unload.onreadystatechange = test;
+        //xmlHttp_Unload.onreadystatechange = test;
         xmlHttp_Unload.send();
     }
 
