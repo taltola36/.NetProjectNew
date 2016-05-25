@@ -28,6 +28,8 @@ public class Handler : IHttpAsyncHandler
         
         switch (command)
         {
+            //add second update
+                
             case "register":
                 AsyncServer.RegisterClient(myAsyncResult);
                 myAsyncResult.CompleteRequest();
@@ -36,9 +38,13 @@ public class Handler : IHttpAsyncHandler
                 AsyncServer.UnregisterClient(myAsyncResult, guid);
                 myAsyncResult.CompleteRequest();
                 break;
-            case "process":
+            case "process1":
                 if (guid != null)
-                    AsyncServer.UpdateClient(myAsyncResult, guid);
+                    AsyncServer.UpdateClient1(myAsyncResult, guid);
+                break;
+            case "process2":
+                if (guid != null)
+                    AsyncServer.UpdateClient2(myAsyncResult, guid);
                 break;
             case "loadBoard":
                 AsyncServer.LoadBoard(myAsyncResult, guid, playerNumber);

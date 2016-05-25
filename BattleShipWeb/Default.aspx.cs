@@ -1,11 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Linq;
-using System.Web;
-using System.Web.DynamicData;
-using System.Web.Services.Description;
-using System.Web.UI;
 using System.Web.UI.WebControls;
 
 public partial class _Default : System.Web.UI.Page
@@ -15,38 +8,29 @@ public partial class _Default : System.Web.UI.Page
     private Button[,] leftBoard = new Button[size,size];
     private Button[,] rightBoard = new Button[size,size];
     private string[] letterArr = { "A", "B", "C", "D", "E", "F", "G", "H", "I", "J" };
-
+    
     protected void Page_Load(object sender, EventArgs e)
     {
         if (!IsPostBack)
         {
-            setLabel("Battleship Game", "battleshipGameLabel", 0, 5);
-            setLabel("", "playerNameLabel", 0, 980);
-            setLabel("", "pairNameLabel", 17, 980);
-            setLabel("", "messages", 34, 420);
-            setLabel("Your battleships", "YourBattleshipsLabel", (size + 4) * buttonSize, (size / 2 + 3) * buttonSize);
-            setLabel("Enemy battleships", "enemyBattleshipsLabel", (size + 4) * buttonSize, (size + size + 3) * buttonSize);
-            setBoard(leftBoard, linePosLeft, "disabled");
-            setBoard(rightBoard, linePosRight, "disabled");
+            Session["GuID"] = Request.Form["GuID"];
+            SetLabel("Battleship Game", "battleshipGameLabel", 0, 5);
+            SetLabel("", "playerNameLabel", 0, 980);
+            SetLabel("", "pairNameLabel", 17, 980);
+            SetLabel("", "SubsNumber", 34, 980);
+            SetLabel("", "messages", 34, 420);
+            SetLabel("Your battleships", "YourBattleshipsLabel", (size + 4)*buttonSize, (size/2 + 3)*buttonSize);
+            SetLabel("Enemy battleships", "enemyBattleshipsLabel", (size + 4)*buttonSize, (size + size + 3)*buttonSize);
+            SetBoard(leftBoard, linePosLeft, "disabled");
+            SetBoard(rightBoard, linePosRight, "disabled");
             //setButton("New Game", buttonSize, 5); no need for now. when clicking the button need to pair to another player.
             //maybe add it after closing window works.
         }
-
-        if (!IsLoggedIn())
+        else
         {
-            var url = Request.Url.LocalPath;
-            Response.Redirect("LoginPage.aspx");
+            Session["GuID"] = Request.Form["GuID"];
+            Session["GuID"] = GuID.Value;
         }
-    }
-
-    private bool IsLoggedIn()
-    {
-        if (Session["UserToken"] != null)
-        {
-            return true;
-        }
-
-        return false;
     }
 
     protected void Page_Init(object sender, EventArgs e)
@@ -65,7 +49,7 @@ public partial class _Default : System.Web.UI.Page
         }
     }
 
-    protected void setButton(string text, int top, int left)
+    protected void SetButton(string text, int top, int left)
     {
         Button myButton = new Button();
         myButton.Text = text;
@@ -79,7 +63,7 @@ public partial class _Default : System.Web.UI.Page
         myButton.Attributes.Add("onclick", "newGameClick();return false");
     }
 
-    protected void setLabel(string text, string id, int top, int left)
+    protected void SetLabel(string text, string id, int top, int left)
     {
         Label myLabel = new Label();
         myLabel.Text = text;
@@ -94,17 +78,17 @@ public partial class _Default : System.Web.UI.Page
         form1.Controls.Add(myLabel);
     }
 
-    protected void setBoard(Button[,] buttonArr, int linePos, string disabled)
+    protected void SetBoard(Button[,] buttonArr, int linePos, string disabled)
     {
         top = buttonSize*3;
         for (int i = 0; i < size; i++)
         {
-            setLabel((i + 1).ToString(),"label", top, linePos-buttonSize);
+            SetLabel((i + 1).ToString(),"label", top, linePos-buttonSize);
             for (int j = 0; j < size; j++)
             {
                 //if (buttonArr == leftBoard)
                     buttonArr[i, j].Attributes.Add("disabled", "disabled");
-                setLabel(letterArr[j], "label", buttonSize*2, linePos + 10);
+                SetLabel(letterArr[j], "label", buttonSize*2, linePos + 10);
                 buttonArr[i, j].Width = buttonArr[i, j].Height = buttonSize;
                 buttonArr[i, j].Style.Add("position", "absolute");
                 buttonArr[i, j].Style.Add("top", top.ToString() + "px");
