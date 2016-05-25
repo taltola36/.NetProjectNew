@@ -106,7 +106,8 @@ public class AsyncServer
     {
         lock (_lock)
         {
-            AsyncResult clientState = null;
+            //AsyncResult clientState = null;
+
             //_clientStateList2.TryGetValue(playerId, out clientState);
             //if (clientState != null)
             //{
@@ -115,7 +116,7 @@ public class AsyncServer
             //    clientState._callback = state._callback;
             //}
 
-            _clientStateList2.Add(playerId, clientState);
+            _clientStateList2.Add(playerId, state);
         }
     }
 

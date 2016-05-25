@@ -182,7 +182,7 @@
     function myUnLoad() {
         if (xmlHttp_ProcessClose.readyState == 4) {
             myJSON_Text = xmlHttp_ProcessClose.responseText;
-
+            alert("bla " + myJSON_Text);
             //never reaches this part. why???
         }
     }
