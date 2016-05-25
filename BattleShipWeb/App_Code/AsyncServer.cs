@@ -16,7 +16,7 @@ public class AsyncServer
         {
             state.ClientGuid = Guid.NewGuid().ToString();
             _clientStateList1.Add(state.ClientGuid, state);
-            _clientStateList2.Add(state.ClientGuid, state);
+            //_clientStateList2.Add(state.ClientGuid, state);
         }
 
         int numberOfOtherPlayer = 0, numberOfCurrentPlayer;
@@ -55,19 +55,12 @@ public class AsyncServer
         string resultStr;
         int numberOfCurrentPlayer, numberOfOtherPlayer;
         JavaScriptSerializer myJavaScriptSerializer = new JavaScriptSerializer();
+        
         GameManager.RemoveClient(playerId);
-        //make sure that the remaining player gets a message to wait(like in register) and to add new Board
-
         resultStr = myJavaScriptSerializer.Serialize("The other player left. Game over. New Game?");
-        //state._context.Response.Write(resultStr);
-        //numberOfCurrentPlayer = getPlayerIndex(playerId);
-        //if (numberOfCurrentPlayer % 2 == 0)
-        //    numberOfOtherPlayer = numberOfCurrentPlayer - 1;
-        //else
-        //    numberOfOtherPlayer = numberOfCurrentPlayer + 1;
-        //state._context.Response.Write(myJavaScriptSerializer.Serialize(""));
-        //resultStr = myJavaScriptSerializer.Serialize("Please wait for another player to join the game");
-        //updateOtherPlayer(resultStr, numberOfOtherPlayer, 1, _clientStateList2);
+        numberOfCurrentPlayer = getPlayerIndex(playerId);
+        numberOfOtherPlayer = getOtherPlayerIndex(numberOfCurrentPlayer);
+        updateOtherPlayer(resultStr, numberOfOtherPlayer, 1, _clientStateList2);
 
         lock (_lock)
         {
@@ -114,13 +107,15 @@ public class AsyncServer
         lock (_lock)
         {
             AsyncResult clientState = null;
-            _clientStateList2.TryGetValue(playerId, out clientState);
-            if (clientState != null)
-            {
-                clientState._context = state._context;
-                clientState._state = state._state;
-                clientState._callback = state._callback;
-            }
+            //_clientStateList2.TryGetValue(playerId, out clientState);
+            //if (clientState != null)
+            //{
+            //    clientState._context = state._context;
+            //    clientState._state = state._state;
+            //    clientState._callback = state._callback;
+            //}
+
+            _clientStateList2.Add(playerId, clientState);
         }
     }
 

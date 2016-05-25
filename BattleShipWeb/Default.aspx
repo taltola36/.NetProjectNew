@@ -5,12 +5,6 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head runat="server">
     <title>Battleship Game</title>
-</head>
-<body>
-    <form id="form1" runat="server">
-        <asp:HiddenField ID="GuID" runat="server" />        
-    </form>
-</body>
 <script>
     var GuID;
     var size = 10;
@@ -65,8 +59,8 @@
             var result = eval("(" + myJSON_Text + ")");
             GuID = result.indexes;
 
-            document.getElementById("GuID").value = GuID;
-            sessionStorage.setItem("guid", GuID);
+            document.getElementById('<%= GuID.ClientID %>').value = GuID;
+            //sessionStorage.setItem("guid", GuID);
             pairNumber = result.isHit;
             player = result.boardName;
             loadBoard();
@@ -94,7 +88,7 @@
             initBoard();
             setLabels();
 
-            //ProcessFunctionClose();
+            ProcessFunctionClose();
             if (player == "secondPlayer" || (player == "firstPlayer" && !wait))
                 ProcessFunctionMakeMove();
             if (player == "firstPlayer" && wait)
@@ -298,4 +292,11 @@
     window.onbeforeunload = windowClosed;
 
 </script>
+</head>
+
+    <body>
+    <form id="form1" runat="server">
+        <asp:HiddenField ID="GuID" runat="server" />        
+    </form>
+</body>
 </html>

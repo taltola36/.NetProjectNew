@@ -11,9 +11,10 @@ public partial class _Default : System.Web.UI.Page
     
     protected void Page_Load(object sender, EventArgs e)
     {
+        Session["guid"] = GuID.Value;
+        //Session["GuID"] = Request.Form["GuID"];
         if (!IsPostBack)
         {
-            Session["GuID"] = Request.Form["GuID"];
             SetLabel("Battleship Game", "battleshipGameLabel", 0, 5);
             SetLabel("", "playerNameLabel", 0, 980);
             SetLabel("", "pairNameLabel", 17, 980);
@@ -25,11 +26,6 @@ public partial class _Default : System.Web.UI.Page
             SetBoard(rightBoard, linePosRight, "disabled");
             //setButton("New Game", buttonSize, 5); no need for now. when clicking the button need to pair to another player.
             //maybe add it after closing window works.
-        }
-        else
-        {
-            Session["GuID"] = Request.Form["GuID"];
-            Session["GuID"] = GuID.Value;
         }
     }
 
