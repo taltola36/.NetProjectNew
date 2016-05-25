@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" CodeFile="AdminLogin.aspx.cs" Inherits="Admin" UnobtrusiveValidationMode="None" %>
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeFile="LoginPage.aspx.cs" Inherits="Admin" UnobtrusiveValidationMode="None" %>
 
 <%@ Register TagPrefix="uc1" TagName="ThemesUC" Src="~/Admin/ThemesUC.ascx" %>
 
@@ -60,6 +60,13 @@
         .auto-style10 {
             height: 26px;
         }
+        .auto-style11 {
+            width: 480px;
+            height: 76px;
+        }
+        .auto-style12 {
+            font-size: large;
+        }
     </style>
 </head>
 <body>
@@ -69,8 +76,14 @@
             <strong>
                 <br />
                 <br />
-                Login Page<br />
+                <img alt="battleship text" class="auto-style11" src="battleship-iphone-logo.png" /><br />
                 <br />
+            <br />
+            <br />
+                <br />
+            <span class="auto-style12">please enter username:<br />
+            <br />
+            </span>
             </strong>
         </div>
         <table class="auto-style2">
@@ -84,19 +97,17 @@
                 </td>
             </tr>
             <tr>
-                <td class="auto-style9">Password</td>
+                <td class="auto-style9">&nbsp;</td>
                 <td class="auto-style6">
-                    <asp:TextBox ID="TextBoxPassword" runat="server" TextMode="Password" Width="180px"></asp:TextBox>
+                    <asp:Button ID="Button_Login" runat="server" OnClick="Button_Login_Click" Style="margin-left: 40px; margin-right: 4px" Text="Login" Width="112px" />
                 </td>
                 <td class="auto-style7">
-                    <asp:RequiredFieldValidator ID="RequiredFieldValidator2" runat="server" ControlToValidate="TextBoxPassword" CssClass="auto-style8" ErrorMessage="Please enter Password" ForeColor="Red"></asp:RequiredFieldValidator>
-                </td>
+                    &nbsp;</td>
             </tr>
             <tr>
                 <td class="auto-style5">&nbsp;</td>
                 <td class="auto-style6">
-                    <asp:Button ID="Button_Login" runat="server" OnClick="Button_Login_Click" Style="margin-left: 40px; margin-right: 4px" Text="Login" Width="112px" />
-                </td>
+                    &nbsp;</td>
                 <td class="auto-style7">&nbsp;</td>
             </tr>
             <tr>

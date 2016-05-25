@@ -18,7 +18,6 @@ public class AdminAsyncServer
 
         //'[[0,0,0,1,1,1,0,0,0,1],[1,0,0,0,0,0,0,1,0,1],[0,0,0,1,1,0,0,1,0,1],[0,1,0,0,0,0,0,1,0,0],[0,1,0,0,0,0,0,1,0,0],[0,0,0,1,1,1,0,0,0,1],[0,0,0,1,1,1,0,0,0,1],[1,0,0,1,0,0,0,0,0,1],[1,0,0,1,0,0,0,0,0,0],[0,0,0,1,0,0,0,1,0,0]]';
 
-
         SqlConnection con = new SqlConnection(connectionString);
         string sql = "Insert into Board(Structure_Board) Values('" + stringBoard + "')";
         con.Open();

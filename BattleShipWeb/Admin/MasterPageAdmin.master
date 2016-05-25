@@ -1,5 +1,8 @@
 ﻿<%@ Master Language="C#" AutoEventWireup="true" CodeFile="MasterPageAdmin.master.cs" Inherits="Admin_MasterPageAdmin" %>
 
+<%@ Register Src="~/Admin/ThemesUC.ascx" TagPrefix="uc1" TagName="ThemesUC" %>
+
+
 <!DOCTYPE html>
 
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -7,26 +10,51 @@
     <title></title>
     <asp:ContentPlaceHolder ID="head" runat="server">
     </asp:ContentPlaceHolder>
+    <style type="text/css">
+        .auto-style1 {
+            font-size: small;
+            width: 1334px;
+        }
+        .auto-style2 {
+            font-size: x-small;
+            width: 1396px;
+        }
+        .auto-style3 {
+            font-size: medium;
+            text-align: right;
+        }
+        .auto-style4 {
+            font-size: medium;
+            width: 1396px;
+            height: 21px;
+        }
+        .auto-style5 {
+            height: 21px;
+            width: 70px;
+        }
+        .auto-style6 {
+            font-size: medium;
+        }
+    </style>
+    <%--<link rel="stylesheet" type="text/css" href="style.css"/>--%>
 </head>
 <body>
     <asp:ContentPlaceHolder ID="ContentPlaceHolder2" runat="server">
     </asp:ContentPlaceHolder>
 
-Hello Admin User!
+    <strong><span class="auto-style6">Hello Admin User!</span></strong>
     <table class="auto-style1">
         <tr>
             <td class="auto-style2">
-                <asp:HyperLink ID="HyperLink1" runat="server" NavigateUrl="http://localhost:54968/Admin/AdminAdd.aspx" Style="font-size: large">Add new board</asp:HyperLink>
-            </td>
-        </tr>
-        <tr>
-            <td class="auto-style3">
-                <asp:HyperLink ID="HyperLink2" runat="server" NavigateUrl="http://localhost:54968/Admin/AdminDelete.aspx" Style="font-size: large">Delete board</asp:HyperLink>
+                <asp:HyperLink ID="HyperLink1" runat="server" NavigateUrl="http://localhost:54968/Admin/AdminAdd.aspx" CssClass="auto-style3">Add new board</asp:HyperLink>
             </td>
         </tr>
         <tr>
             <td class="auto-style4">
-                <asp:HyperLink ID="HyperLink3" runat="server" NavigateUrl="http://localhost:54968/Admin/AdminEdit.aspx" Style="font-size: large; background-color: #FFFF00;">Edit Board</asp:HyperLink>
+                <asp:HyperLink ID="HyperLink2" runat="server" NavigateUrl="http://localhost:54968/Admin/AdminDelete.aspx" CssClass="auto-style3">Delete board</asp:HyperLink>
+            </td>
+            <td class="auto-style5">
+                <asp:HyperLink ID="HyperLink3" runat="server" NavigateUrl="http://localhost:54968/Admin/AdminLogout.aspx" CssClass="auto-style3">logout</asp:HyperLink>
             </td>
         </tr>
     </table>
@@ -35,6 +63,8 @@ Hello Admin User!
         <asp:ContentPlaceHolder ID="ContentPlaceHolder1" runat="server">
         </asp:ContentPlaceHolder>
         </div>
+        <uc1:ThemesUC runat="server" ID="ThemesUC" />
     </form>
+    
 </body>
 </html>
