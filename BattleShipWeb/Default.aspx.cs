@@ -15,6 +15,7 @@ public partial class _Default : System.Web.UI.Page
         {
             SetLabel("Battleship Game", "battleshipGameLabel", 0, 5);
             SetLabel(Session["UserName"].ToString(), "playerNameLabel", 0, 980);
+            SetLabel("", "playerNameLabel", 0, 980);
             SetLabel("", "pairNameLabel", 17, 980);
             SetLabel("", "SubsNumber", 34, 980);
             SetLabel("", "messages", 34, 420);
@@ -22,8 +23,6 @@ public partial class _Default : System.Web.UI.Page
             SetLabel("Enemy battleships", "enemyBattleshipsLabel", (size + 4)*buttonSize, (size + size + 3)*buttonSize);
             SetBoard(leftBoard, linePosLeft, "disabled");
             SetBoard(rightBoard, linePosRight, "disabled");
-            //setButton("New Game", buttonSize, 5); no need for now. when clicking the button need to pair to another player.
-            //maybe add it after closing window works.
         }
     }
 

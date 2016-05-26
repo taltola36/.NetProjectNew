@@ -23,13 +23,12 @@ public class Handler : IHttpAsyncHandler
         string command = myAsyncResult._context.Request.QueryString["cmd"];
         string guid = myAsyncResult._context.Request.QueryString["playerId"];
         string indexes = myAsyncResult._context.Request.QueryString["indexes"];
-        string playerNumber = myAsyncResult._context.Request.QueryString["playerNumber"];  
+        string playerNumber = myAsyncResult._context.Request.QueryString["playerNumber"];
+        string username = myAsyncResult._context.Request.QueryString["username"];
         JavaScriptSerializer myJavaScriptSerializer = new JavaScriptSerializer();
         
         switch (command)
         {
-            //add second update
-                
             case "register":
                 AsyncServer.RegisterClient(myAsyncResult);
                 myAsyncResult.CompleteRequest();
@@ -47,7 +46,7 @@ public class Handler : IHttpAsyncHandler
                     AsyncServer.UpdateClient2(myAsyncResult, guid);
                 break;
             case "loadBoard":
-                AsyncServer.LoadBoard(myAsyncResult, guid, playerNumber);
+                AsyncServer.LoadBoard(myAsyncResult, guid, playerNumber, username);
                 myAsyncResult.CompleteRequest();
                 break;
             case "makeMove":
