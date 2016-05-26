@@ -11,12 +11,10 @@ public partial class _Default : System.Web.UI.Page
     
     protected void Page_Load(object sender, EventArgs e)
     {
-        Session["guid"] = GuID.Value;
-        //Session["GuID"] = Request.Form["GuID"];
         if (!IsPostBack)
         {
             SetLabel("Battleship Game", "battleshipGameLabel", 0, 5);
-            SetLabel("", "playerNameLabel", 0, 980);
+            SetLabel(Session["UserName"].ToString(), "playerNameLabel", 0, 980);
             SetLabel("", "pairNameLabel", 17, 980);
             SetLabel("", "SubsNumber", 34, 980);
             SetLabel("", "messages", 34, 420);

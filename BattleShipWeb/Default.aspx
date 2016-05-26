@@ -128,7 +128,7 @@
 
     function setLabels() {
         if (player == "firstPlayer") {
-            document.getElementById("playerNameLabel").textContent = "First Player";
+            //document.getElementById("playerNameLabel").textContent = "First Player";
             document.getElementById("pairNameLabel").textContent = "Pair Number " + pairNumber;
             document.getElementById("SubsNumber").textContent = "Submarines left: " + numberOfSubmarinesLeft +"/" + numberOfAllSubmarines;
 
@@ -141,7 +141,7 @@
                 setMessage("You can play now", "red", "450px");
         }
         if (player == "secondPlayer") {
-            document.getElementById("playerNameLabel").textContent = "Second Player";
+            //document.getElementById("playerNameLabel").textContent = "Second Player";
             document.getElementById("pairNameLabel").textContent = "Pair Number " + pairNumber;
             document.getElementById("SubsNumber").textContent = "Submarines left: " + numberOfSubmarinesLeft + "/" + numberOfAllSubmarines;
             document.getElementById("playerNameLabel").style.backgroundColor = "green";
@@ -182,7 +182,7 @@
     function myUnLoad() {
         if (xmlHttp_ProcessClose.readyState == 4) {
             myJSON_Text = xmlHttp_ProcessClose.responseText;
-
+            alert(xmlHttp_ProcessClose.responseText);
             //never reaches this part. why???
         }
     }

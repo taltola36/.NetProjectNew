@@ -77,7 +77,7 @@ public class AsyncServer
             foreach (AsyncResult clientState in _clientStateList2.Values)
             {
                 numberOfCurrentPlayer++;
-                if (playerId.Equals(clientState.ClientGuid))
+                if (playerId.Equals(clientState.ClientGuid))        //*******error
                 {
                     clientState.CompleteRequest();
                     break;

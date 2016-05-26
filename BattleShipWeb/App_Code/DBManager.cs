@@ -9,7 +9,7 @@ using BattleShipModel;
 
 public class DBManager
 {
-    private const string connectionString = "server=TALBENAMI\\SQLEXPRESS;" +
+    private const string connectionString = "server=AVITALHOVAV\\SQLEXPRESS;" +
                                             "uid=root;" +
                                             "pwd=root; database=.NetProject";
 
@@ -68,7 +68,7 @@ public class DBManager
         return retBoard;
     }
 
-    public void WriteMove(string player, int indexHit, bool hit)
+    public static void WriteMove(string player, int indexHit, bool hit)
     {
         SqlConnection con = new SqlConnection(connectionString);
         string sql = "Insert into Move(Player, IndexHit, Hit) Values('" + player + "','" + indexHit + "','" + hit.ToString() + "')";
@@ -78,7 +78,7 @@ public class DBManager
         SqlDataReader dr = cmd.ExecuteReader();
     }
 
-    public void AddPlayerData(string player, bool isWin)
+    public static void AddPlayerData(string player, bool isWin)
     {
         bool playerExist = false;
         SqlConnection con = new SqlConnection(connectionString);
