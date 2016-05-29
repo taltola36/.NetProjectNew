@@ -11,6 +11,11 @@ public partial class _Default : System.Web.UI.Page
     
     protected void Page_Load(object sender, EventArgs e)
     {
+        if (!IsLoggedIn())
+        {
+            Response.Redirect("LoginPage.aspx");
+        }
+
         if (!IsPostBack)
         {
             SetLabel("Battleship Game", "battleshipGameLabel", 0, 5);
@@ -25,6 +30,16 @@ public partial class _Default : System.Web.UI.Page
             //setButton("New Game", buttonSize, 5); no need for now. when clicking the button need to pair to another player.
             //maybe add it after closing window works.
         }
+    }
+
+    private bool IsLoggedIn()
+    {
+        if (Session["UserToken"] != null)
+        {
+            return true;
+        }
+
+        return false;
     }
 
     protected void Page_Init(object sender, EventArgs e)

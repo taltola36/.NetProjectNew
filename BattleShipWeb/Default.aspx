@@ -10,6 +10,8 @@
     var size = 10;
     var boardArr, myJSON_Text, player, senderButton, pairNumber, numberOfSubmarinesLeft, numberOfAllSubmarines, gameOver = false, wait;
     var xmlHttp_loadBoard, xmlHttp_Register, xmlHttp_ProcessLoadBoard, xmlHttp_ProcessClose, xmlHttp_Unload, xmlHttp_MakeMove, xmlHttp_MakeMoveProcess;
+    debugger;
+    var user = '<%=Session["UserName"] %>';
 
     function setWindow() {
         window.moveTo(0, 0);

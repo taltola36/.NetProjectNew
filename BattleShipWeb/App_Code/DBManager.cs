@@ -9,7 +9,7 @@ using BattleShipModel;
 
 public class DBManager
 {
-    private const string connectionString = "server=AVITALHOVAV\\SQLEXPRESS;" +
+    private const string connectionString = "server=TALBENAMI\\SQLEXPRESS;" +
                                             "uid=root;" +
                                             "pwd=root; database=.NetProject";
 
