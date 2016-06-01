@@ -20,7 +20,7 @@ public partial class Admin_AdminAdd : System.Web.UI.Page
         if (!IsLoggedIn())
         {
             var url = Request.Url.LocalPath;
-            Response.Redirect("AdminLogin.aspx?urlback=" + url);
+            Response.Redirect("~/Admin/AdminLogin.aspx?urlback=" + url);
         }
     }
 

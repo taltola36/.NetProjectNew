@@ -13,7 +13,7 @@ public partial class _Default : System.Web.UI.Page
     {
         if (!IsLoggedIn())
         {
-            Response.Redirect("LoginPage.aspx");
+            Response.Redirect("~/LoginPage.aspx");
         }
 
         if (!IsPostBack)
