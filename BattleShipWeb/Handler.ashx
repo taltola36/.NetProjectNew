@@ -11,7 +11,7 @@ using System.Drawing;
 public class Handler : IHttpAsyncHandler
 {
     public IAsyncResult BeginProcessRequest(HttpContext ctx, AsyncCallback cb, Object obj)
-        {
+    {
         AsyncResult currentAsyncState = new AsyncResult(ctx, cb, obj);
         ThreadPool.QueueUserWorkItem(new WaitCallback(RequestWorker), currentAsyncState); 
         return currentAsyncState;
@@ -23,6 +23,7 @@ public class Handler : IHttpAsyncHandler
         string command = myAsyncResult._context.Request.QueryString["cmd"];
         string guid = myAsyncResult._context.Request.QueryString["playerId"];
         string indexes = myAsyncResult._context.Request.QueryString["indexes"];
+        string loadOrChange = myAsyncResult._context.Request.QueryString["loadOrChange"];
         string playerNumber = myAsyncResult._context.Request.QueryString["playerNumber"];
         string username = myAsyncResult._context.Request.QueryString["username"];
         JavaScriptSerializer myJavaScriptSerializer = new JavaScriptSerializer();
@@ -46,7 +47,7 @@ public class Handler : IHttpAsyncHandler
                     AsyncServer.UpdateClient2(myAsyncResult, guid);
                 break;
             case "loadBoard":
-                AsyncServer.LoadBoard(myAsyncResult, guid, playerNumber, username);
+                AsyncServer.LoadBoard(myAsyncResult, guid, playerNumber, loadOrChange, username);
                 myAsyncResult.CompleteRequest();
                 break;
             case "makeMove":

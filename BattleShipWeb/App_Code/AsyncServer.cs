@@ -10,7 +10,7 @@ public class AsyncServer
     private static Object _lock = new Object();
     private static Dictionary<string, AsyncResult> _clientStateList1 = new Dictionary<string, AsyncResult>();
     private static Dictionary<string, AsyncResult> _clientStateList2 = new Dictionary<string, AsyncResult>();
-    
+
     public static void RegisterClient(AsyncResult state)
     {
         lock (_lock)
@@ -29,37 +29,22 @@ public class AsyncServer
     public static void UnregisterClient(AsyncResult state, String playerId)
     {
         JavaScriptSerializer myJavaScriptSerializer = new JavaScriptSerializer();
-        string otherPlayerId = GameManager.getOtherPlayerID(playerId);        
-        GameManager.RemoveClient(playerId);
-        string resultStr = myJavaScriptSerializer.Serialize("The other player left. Game over. New Game?");
-        updateOtherPlayer(resultStr, otherPlayerId, 1, _clientStateList2);
-
-        lock (_lock)
+        if (_clientStateList2.Count != 0 && GameManager.playerExists(playerId))
         {
-            _clientStateList1.Remove(playerId);
-            _clientStateList2.Remove(playerId);
-        }
-    }
+            string otherPlayerId = GameManager.getOtherPlayerID(playerId);
+            GameManager.RemovePlayer(playerId);
+            string resultStr = myJavaScriptSerializer.Serialize("The other player left. Game over. New Game?");
+            updateOtherPlayer(resultStr, otherPlayerId, 1, _clientStateList2);
 
-    public static int getPlayerIndex(string playerId)
-    {
-        int numberOfCurrentPlayer = 0;
-        lock (_lock)
-        {
-            foreach (AsyncResult clientState in _clientStateList2.Values)
+            lock (_lock)
             {
-                numberOfCurrentPlayer++;
-                if (playerId.Equals(clientState.ClientGuid))
-                {
-                    clientState.CompleteRequest();
-                    break;
-                }
+                _clientStateList1.Remove(playerId);
+                _clientStateList2.Remove(playerId);
             }
         }
-        return numberOfCurrentPlayer;
     }
 
-    public static void UpdateClient1(AsyncResult state, String playerId)
+public static void UpdateClient1(AsyncResult state, String playerId)
     {
         lock (_lock)
         {
@@ -73,110 +58,88 @@ public class AsyncServer
             }
         }
     }
-
+    
     public static void UpdateClient2(AsyncResult state, String playerId)
     {
-        int count = 0;
-        lock (_lock)
-        {
-            foreach (AsyncResult clientState1 in _clientStateList1.Values)
+        bool update = true;
+       
+        lock (_lock) {
+            foreach (AsyncResult clientState in _clientStateList2.Values)       //check if it already exists in list2
             {
-                count++;
-                if (count == _clientStateList2.Count + 1)
+                if (clientState.ClientGuid.Equals(playerId))
                 {
-                    state.ClientGuid = playerId;
-                    _clientStateList2.Add(playerId, state);
+                    update = false;
+                    clientState._state = state;
+                    clientState.ClientGuid = playerId;
                 }
             }
         }
+
+        if (update)     //if not then add for the first time
+        {
+            state.ClientGuid = playerId;
+            _clientStateList2.Add(playerId, state);     
+        }
     }
 
-    public static void LoadBoard(AsyncResult state, string playerId, string playerNumber, string username)
+    public static void LoadBoard(AsyncResult state, string playerId, string playerNumber, string loadOrChange, string username)
     {
-        Board b = GameManager.LoadBoard(playerId, playerNumber, username);
-        string numberOfShips1 = "", numberOfShips2 = "";
-        BoardData bd = null, bd1 = null;
-        string resultStr;
-        JavaScriptSerializer myJavaScriptSerializer = new JavaScriptSerializer();        
-        Game game = GameManager.getGameOfPlayer(playerId);
+        int firstToConnect = GameManager.getFirstPlayer(playerId);
+        string resultStr = "";
+        JavaScriptSerializer myJavaScriptSerializer = new JavaScriptSerializer();
 
-        if (game.Player1 != null && game.Player1.ID.Equals(playerId))   //if its the first player only send board
+        Board b = null;
+        if (loadOrChange.Equals("load"))
+            b = GameManager.LoadBoard(playerId, playerNumber, username);
+        if (loadOrChange.Equals("change"))
+            b = GameManager.ChangeBoard(playerId);
+
+        List<BoardData> boardDataList = GameManager.getEnemyShipsData(playerId, firstToConnect, b);
+
+        if (boardDataList.Count == 2)
         {
-            if (GameManager.hasBeenClosed(playerId))
-            {
-                numberOfShips2 = GameManager.getNumberOfShips(game.Player2.ID, "2");
-                bd = new BoardData(b.BoardArray, numberOfShips2, numberOfShips2, !GameManager.hasBeenClosed(playerId));
-
-                numberOfShips1 = GameManager.getNumberOfShips(game.Player1.ID, "1");
-                bd1 = new BoardData(b.BoardArray, numberOfShips1, numberOfShips1, !GameManager.hasBeenClosed(playerId));
-                
-                resultStr = myJavaScriptSerializer.Serialize(bd1);
-                updatePlayerMove(resultStr, game.Player2.ID);
-                resultStr = myJavaScriptSerializer.Serialize(bd);
-            }
-            else
-            {
-                bd = new BoardData(b.BoardArray, "", "", !GameManager.hasBeenClosed(playerId));                            
-            }
+            resultStr = myJavaScriptSerializer.Serialize(boardDataList[1]);
+            updatePlayerMove(resultStr, GameManager.getOtherPlayerID(playerId));
+            resultStr = myJavaScriptSerializer.Serialize(boardDataList[0]);
         }
-        if (game.Player2 != null && game.Player2.ID.Equals(playerId))   //if its the second player, send board + remaining ships
-        {
-            numberOfShips1 = GameManager.getNumberOfShips(game.Player1.ID, "1");
-            bd = new BoardData(b.BoardArray, numberOfShips1, numberOfShips1, !GameManager.hasBeenClosed(playerId));
-
-            numberOfShips2 = GameManager.getNumberOfShips(game.Player2.ID, "2");
-            bd1 = new BoardData(null, numberOfShips2, numberOfShips2, !GameManager.hasBeenClosed(playerId));
-            resultStr = myJavaScriptSerializer.Serialize(bd1);
-            updatePlayerMove(resultStr, game.Player1.ID);
-            resultStr = myJavaScriptSerializer.Serialize(bd);
-        }
-        resultStr = myJavaScriptSerializer.Serialize(bd);
+        if (boardDataList.Count == 1)
+            resultStr = myJavaScriptSerializer.Serialize(boardDataList[0]);
         state._context.Response.Write(resultStr);
-    }
-
-    public static int getOtherPlayerIndex(int numberOfCurrentPlayer)
-    {
-        int numberOfOtherPlayer;
-
-        if (numberOfCurrentPlayer % 2 == 0)
-            numberOfOtherPlayer = numberOfCurrentPlayer - 1;
-        else
-            numberOfOtherPlayer = numberOfCurrentPlayer + 1;
-        
-        return numberOfOtherPlayer;
     }
 
     public static void MakeMove(AsyncResult state, string playerId, string indexes)
     {
-        int numberOfCurrentPlayer = 0, numberOfOtherPlayer;
         JavaScriptSerializer myJavaScriptSerializer = new JavaScriptSerializer();
-        string resultStr, otherClientGuid;
+        string resultStr="", otherClientGuid;
 
         locResult result = GameManager.MakeMove(playerId, indexes);
 
-        if (result == null) //It is not this player's turn
+        if (result.boardName.Equals("")) //wait for turn ot for another to join
         {
-            resultStr = myJavaScriptSerializer.Serialize("Please wait for your turn");
+            if (result.indexes.Equals("join"))
+                resultStr = myJavaScriptSerializer.Serialize("Please wait for another player to join the game");
+            if (result.indexes.Equals("turn"))
+                resultStr = myJavaScriptSerializer.Serialize("Please wait for your turn");
+           
             state._context.Response.Write(resultStr);
             updatePlayerMove(resultStr, playerId);  //only completeRequest
         }
 
-        if (result != null)
+        if (!result.boardName.Equals(""))
         {
             if (result.boardName.Equals("w"))   //prepare data to the wininng player
                 result.isHit = "Game over! You won";
 
             resultStr = myJavaScriptSerializer.Serialize(result);
             state._context.Response.Write(resultStr); //send data to xmlHttp_MakeMove
-            numberOfCurrentPlayer = updatePlayerMove(resultStr, playerId); //send data to xmlHttp_MakeMoveProcess
+            updatePlayerMove(resultStr, playerId); //send data to xmlHttp_MakeMoveProcess
             Game game = GameManager.getGameOfPlayer(playerId);
+            
             string otherPlayerId;
             if (game.Player1.ID.Equals(playerId))
                 otherPlayerId = game.Player2.ID;
             else
                 otherPlayerId = game.Player1.ID;
-
-            //numberOfOtherPlayer = getOtherPlayerIndex(numberOfCurrentPlayer);
 
             if (result.boardName.Equals("w"))   //prepare data to the losing player
                 result.isHit = "Game over! You lost";
