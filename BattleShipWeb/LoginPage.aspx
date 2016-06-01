@@ -6,8 +6,9 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head runat="server">
-    <title></title>
+    <link rel="stylesheet" href="animate.css" />
 
+    <title></title>
     <style type="text/css">
         .auto-style1 {
             font-size: xx-large;
@@ -60,10 +61,12 @@
         .auto-style10 {
             height: 26px;
         }
+
         .auto-style11 {
             width: 480px;
             height: 76px;
         }
+
         .auto-style12 {
             font-size: large;
         }
@@ -72,18 +75,17 @@
 <body>
     <form id="form1" runat="server">
         <div class="auto-style1">
-
             <strong>
                 <br />
                 <br />
-                <img alt="battleship text" class="auto-style11" src="battleship-iphone-logo.png" /><br />
+                        <img alt="battleship text" class="flash" src="battleship-iphone-logo.png" /><br />
                 <br />
-            <br />
-            <br />
                 <br />
-            <span class="auto-style12">please enter username:<br />
-            <br />
-            </span>
+                <br />
+                <br />
+                <span class="auto-style12">please enter username:<br />
+                    <br />
+                </span>
             </strong>
         </div>
         <table class="auto-style2">
@@ -101,13 +103,11 @@
                 <td class="auto-style6">
                     <asp:Button ID="Button_Login" runat="server" OnClick="Button_Login_Click" Style="margin-left: 40px; margin-right: 4px" Text="Login" Width="112px" />
                 </td>
-                <td class="auto-style7">
-                    &nbsp;</td>
+                <td class="auto-style7">&nbsp;</td>
             </tr>
             <tr>
                 <td class="auto-style5">&nbsp;</td>
-                <td class="auto-style6">
-                    &nbsp;</td>
+                <td class="auto-style6">&nbsp;</td>
                 <td class="auto-style7">&nbsp;</td>
             </tr>
             <tr>

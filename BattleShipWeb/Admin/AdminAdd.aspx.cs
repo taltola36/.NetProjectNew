@@ -37,6 +37,6 @@ public partial class Admin_AdminAdd : System.Web.UI.Page
 
     protected void ButtonBack_Click(object sender, EventArgs e)
     {
-        Response.Redirect("http://localhost:54968/Admin/AdminOptions.aspx");
+        Response.Redirect("~/Admin/AdminOptions.aspx");
     }
 }

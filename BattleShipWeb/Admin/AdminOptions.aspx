@@ -39,22 +39,22 @@
         <table class="auto-style1"  style="text-align: center;">
             <tr>
                 <td class="auto-style2">
-                    <asp:HyperLink ID="HyperLink1" runat="server" NavigateUrl="http://localhost:54968/Admin/AdminAdd.aspx" Style="font-size: large">Add new board</asp:HyperLink>
+                    <asp:HyperLink ID="HyperLink1" runat="server" NavigateUrl="~/Admin/AdminAdd.aspx" Style="font-size: large">Add new board</asp:HyperLink>
                 </td>
             </tr>
             <tr>
                 <td class="auto-style3">
-                    <asp:HyperLink ID="HyperLink2" runat="server" NavigateUrl="http://localhost:54968/Admin/AdminDelete.aspx" Style="font-size: large">Delete board</asp:HyperLink>
+                    <asp:HyperLink ID="HyperLink2" runat="server" NavigateUrl="~/Admin/AdminDelete.aspx" Style="font-size: large">Delete board</asp:HyperLink>
                 </td>
             </tr>
             <tr>
                 <td class="auto-style4">
-                    <asp:HyperLink ID="HyperLink3" runat="server" NavigateUrl="http://localhost:54968/Admin/AdminPlayersMoves.aspx" style="font-size: large">View Players Moves</asp:HyperLink>
+                    <asp:HyperLink ID="HyperLink3" runat="server" NavigateUrl="~/Admin/AdminPlayersMoves.aspx" style="font-size: large">View Players Moves</asp:HyperLink>
                 </td>
             </tr>
             <tr>
                 <td class="auto-style4">
-                    <asp:HyperLink ID="HyperLink4" runat="server" NavigateUrl="http://localhost:54968/Admin/AdminStatistics.aspx" style="font-size: large">View Statistics</asp:HyperLink>
+                    <asp:HyperLink ID="HyperLink4" runat="server" NavigateUrl="~/Admin/AdminStatistics.aspx" style="font-size: large">View Statistics</asp:HyperLink>
                 </td>
             </tr>
         </table>

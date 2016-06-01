@@ -16,7 +16,7 @@ public partial class Admin : System.Web.UI.Page
     protected void Page_Load(object sender, EventArgs e)
     {
         if (Session["adminToken"] != null)
-            Response.Redirect("http://localhost:54968/Admin/AdminOptions.aspx");
+            Response.Redirect("~/Admin/AdminOptions.aspx");
     }
 
     protected void Button_Login_Click(object sender, EventArgs e)
@@ -31,7 +31,8 @@ public partial class Admin : System.Web.UI.Page
 
         while (dr.Read())
         {
-            if (dr["Admin_User_Name"].ToString().Equals(TextBoxUserName.Text) && dr["Admin_Password"].ToString().Equals(TextBoxPassword.Text))
+            string hashingPassword = GetStringSha256Hash(TextBoxPassword.Text);
+            if (dr["Admin_User_Name"].ToString().Equals(TextBoxUserName.Text) && dr["Admin_Password"].ToString().Equals(hashingPassword))
             {
                 adminExist = true;
             }
@@ -45,13 +46,25 @@ public partial class Admin : System.Web.UI.Page
         {
             Session["adminToken"] = Guid.NewGuid().ToString();
             
-            string url = "http://localhost:54968/Admin/AdminOptions.aspx";
+            string url = "~/Admin/AdminOptions.aspx";
             if (Request["urlback"] != null)
             {
                 url = Request["urlback"];
             }
 
             Response.Redirect(url);
+        }
+    }
+    internal static string GetStringSha256Hash(string text)
+    {
+        if (String.IsNullOrEmpty(text))
+            return String.Empty;
+
+        using (var sha = new System.Security.Cryptography.SHA256Managed())
+        {
+            byte[] textData = System.Text.Encoding.UTF8.GetBytes(text);
+            byte[] hash = sha.ComputeHash(textData);
+            return BitConverter.ToString(hash).Replace("-", String.Empty);
         }
     }
 }

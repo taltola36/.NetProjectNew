@@ -323,8 +323,8 @@ public class GameManager
             {
                 result = new locResult(indexes, "w", isHit, subsLeft); //game over
                 
-                //DBManager.AddPlayerData(currentPlayer.userName, true);
-                //DBManager.AddPlayerData(otherPlayer.userName, false);
+                DBManager.AddPlayerData(currentPlayer.userName, true);
+                DBManager.AddPlayerData(otherPlayer.userName, false);
             }
             else
                 result = new locResult(indexes, "r", isHit, subsLeft); //game not over

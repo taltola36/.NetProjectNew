@@ -21,7 +21,7 @@ public partial class _Default : System.Web.UI.Page
             if (Session["refreshed"] == null && Session["UserName2"] == null)
             {
                 Session["refreshed"] = new Object();
-                Response.Redirect("http://localhost:54968/LoginPage.aspx");
+                Response.Redirect("/LoginPage.aspx");
             }
             else
                 Session["refreshed"] = null;

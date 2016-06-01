@@ -46,25 +46,25 @@
     <table class="auto-style1">
         <tr>
             <td class="auto-style2">
-                <asp:HyperLink ID="HyperLink1" runat="server" NavigateUrl="http://localhost:54968/Admin/AdminAdd.aspx" CssClass="auto-style3">Add new board</asp:HyperLink>
+                <asp:HyperLink ID="HyperLink1" runat="server" NavigateUrl="~/Admin/AdminAdd.aspx" CssClass="auto-style3">Add new board</asp:HyperLink>
             </td>
         </tr>
         <tr>
             <td class="auto-style4">
-                <asp:HyperLink ID="HyperLink2" runat="server" NavigateUrl="http://localhost:54968/Admin/AdminDelete.aspx" CssClass="auto-style3">Delete board</asp:HyperLink>
+                <asp:HyperLink ID="HyperLink2" runat="server" NavigateUrl="~/Admin/AdminDelete.aspx" CssClass="auto-style3">Delete board</asp:HyperLink>
             </td>
             <td class="auto-style5">
-                <asp:HyperLink ID="HyperLink3" runat="server" NavigateUrl="http://localhost:54968/Admin/AdminLogout.aspx" CssClass="auto-style3">logout</asp:HyperLink>
+                <asp:HyperLink ID="HyperLink3" runat="server" NavigateUrl="~/Admin/AdminLogout.aspx" CssClass="auto-style3">logout</asp:HyperLink>
             </td>
         </tr>
         <tr>
             <td class="auto-style4">
-                <asp:HyperLink ID="HyperLink4" runat="server" NavigateUrl="http://localhost:54968/Admin/AdminPlayersMoves.aspx" CssClass="auto-style3">View Players Moves</asp:HyperLink>
+                <asp:HyperLink ID="HyperLink4" runat="server" NavigateUrl="~/Admin/AdminPlayersMoves.aspx" CssClass="auto-style3">View Players Moves</asp:HyperLink>
             </td>
         </tr>
          <tr>
             <td class="auto-style4">
-                <asp:HyperLink ID="HyperLink5" runat="server" NavigateUrl="http://localhost:54968/Admin/AdminStatistics.aspx" CssClass="auto-style3">View Statistics</asp:HyperLink>
+                <asp:HyperLink ID="HyperLink5" runat="server" NavigateUrl="~/Admin/AdminStatistics.aspx" CssClass="auto-style3">View Statistics</asp:HyperLink>
             </td>
         </tr>
     </table>

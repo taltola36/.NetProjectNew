@@ -13,7 +13,7 @@ public partial class Admin : System.Web.UI.Page
     protected void Page_Load(object sender, EventArgs e)
     {
         if (Session["UserToken"] != null && Session["refreshed"] == null)
-            Response.Redirect("http://localhost:54968/Default.aspx");
+            Response.Redirect("~/Default.aspx");
     }
 
     protected void Button_Login_Click(object sender, EventArgs e)
@@ -22,8 +22,6 @@ public partial class Admin : System.Web.UI.Page
         Session["UserName2"] = TextBoxUserName.Text;
         Session["UserToken"] = Guid.NewGuid().ToString();
 
-        string url = "http://localhost:54968/Default.aspx";
-
-        Response.Redirect(url);
+        Response.Redirect("~/Default.aspx");
     }
 }
