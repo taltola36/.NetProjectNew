@@ -30,16 +30,19 @@ public class GameManager
         {
             for (i = 0; i < arr.Count; i++)
             {
-                if (arr[i] == null || arr[i].NumberOfPlayers < 2)
-                    pairNumber = i + 1;
-                if (arr[i] == null || arr[i].NumberOfPlayers == 0 || arr[i].NumberOfPlayers == 2)
-                    registered = true;
-                else
+                if (arr[i] != null && arr[i].NumberOfPlayers == 1)
                 {
+                    pairNumber = i + 1;
                     if (arr[i].Player1 != null)
                         registered = false;
                     if (arr[i].Player2 != null)
                         registered = true;
+                    break;
+                }
+                if (arr[i] == null)
+                {
+                    registered = true;
+                    pairNumber = i + 1;
                 }
             }
         }
@@ -48,9 +51,13 @@ public class GameManager
             pairNumber = 1;
             registered = true;
         }
+
         if (pairNumber == -1)
-            pairNumber = i+1;
-        //result is guid and labels info (number of pair and player)
+        {
+            pairNumber = i + 1;
+            registered = true;
+        }
+        
         if (registered)
             result = new locResult(playerId, "firstPlayer", (pairNumber).ToString(), "");
         else
@@ -65,7 +72,7 @@ public class GameManager
 
         for (int i = 0; i < arr.Count; i++)
         {
-            if (arr[i].Player1 != null && arr[i].Player1.ID.Equals(playerId))
+            if (arr[i] != null && arr[i].Player1 != null && arr[i].Player1.ID.Equals(playerId))
             {
                 if (arr[i].Player2 == null)
                     arr[i] = null;
@@ -77,7 +84,7 @@ public class GameManager
                 }
                 break;
             }
-            if (arr[i].Player2 != null && arr[i].Player2.ID.Equals(playerId))
+            if (arr[i] != null && arr[i].Player2 != null && arr[i].Player2.ID.Equals(playerId))
             {
                 if (arr[i].Player1 == null)
                     arr[i] = null;
@@ -87,7 +94,6 @@ public class GameManager
                     registered = !registered;
                     arr[i].hasBeenClosed = true;
                 }
-                
                 break;
             }
         }
@@ -107,9 +113,9 @@ public class GameManager
     {
         for (int i = 0; i < arr.Count; i++)
         {
-            if (arr[i].Player1.ID.Equals(playerId))
+            if (arr[i].Player1 != null && arr[i].Player1.ID.Equals(playerId))
                 return arr[i].hasBeenClosed;
-            if (arr[i].Player2.ID.Equals(playerId))
+            if (arr[i].Player2 != null && arr[i].Player2.ID.Equals(playerId))
                 return arr[i].hasBeenClosed;
         }
         return false;
@@ -120,10 +126,10 @@ public class GameManager
         return arr.Count;
     }
 
-    public static Board LoadBoard(string playerId, string playerNumber)
+    public static Board LoadBoard(string playerId, string playerNumber, string username)
     {
         Board board = DBManager.GetNewBoard();
-        
+        //arr = null;
         if (arr.Count != 0)
         {
             for (int i = 0; i < arr.Count; i++)
@@ -131,7 +137,7 @@ public class GameManager
                 if (arr[i] == null)
                 {
                     arr.Remove(arr[i]);
-                    CreateNewGame(playerId, playerNumber, board);
+                    CreateNewGame(playerId, playerNumber, board, username);
                     arr[i].playTurn = 0;
                     arr[i].ID = i.ToString();
                     break;
@@ -142,6 +148,7 @@ public class GameManager
                 {
                     Player player1 = new Player(playerId);
                     player1.Board = board;
+                    player1.userName = username;
                     arr[i].Player1 = player1;
                     break;
                 }
@@ -149,6 +156,7 @@ public class GameManager
                 {
                     Player player2 = new Player(playerId);
                     player2.Board = board;
+                    player2.userName = username;
                     arr[i].Player2 = player2;
                     break;
                 }
@@ -156,7 +164,7 @@ public class GameManager
                 //this is the last game with 2 players. need to create a new game with 1 player
                 if (arr[i].NumberOfPlayers == 2 && arr.Count - i == 1)
                 {
-                    CreateNewGame(playerId, playerNumber, board);
+                    CreateNewGame(playerId, playerNumber, board, username);
                     arr[i + 1].playTurn = 0;
                     arr[i + 1].ID = (i + 1).ToString();
                     break;
@@ -165,6 +173,7 @@ public class GameManager
                 {
                     Player player1 = new Player(playerId);
                     player1.Board = board;
+                    player1.userName = username;
                     arr[i].Player1 = player1;
                     break;
                 }
@@ -173,7 +182,7 @@ public class GameManager
 
         if (arr.Count == 0) //first Game with player1
         {
-            CreateNewGame(playerId, playerNumber, board);
+            CreateNewGame(playerId, playerNumber, board, username);
             arr[0].playTurn = 0;
             arr[0].ID = "0";
         }
@@ -181,16 +190,17 @@ public class GameManager
         return board;
     }
 
-    public static void CreateNewGame(string playerId, string playerNumber, Board board)
+    public static void CreateNewGame(string playerId, string playerNumber, Board board, string username)
     {
         Game game = new Game();
         Player player1 = new Player(playerId);
+        player1.userName = username;
         player1.Board = board;
         game.Player1 = player1;
         arr.Add(game);
     }
 
-    public static locResult CalcMakeMove(Player currentPlayer, Player otherPlayer, Game game, int k, int l, string indexes, int turn)
+    public static locResult CalcHit(Player currentPlayer, Player otherPlayer, Game game, int k, int l, string indexes, int turn)
     {
         string isHit= "";
         locResult result = null;
@@ -199,14 +209,14 @@ public class GameManager
 
         if (game.playTurn == turn)
         {
-            isHit = currentPlayer.Board.BoardArray[k][l].ToString();
+            isHit = otherPlayer.Board.BoardArray[k][l].ToString();
             if (isHit.Equals("1"))
             {
                 currentPlayer.numberOfHits++;
-                DBManager.WriteMove(currentPlayer.ID, Int32.Parse(indexes), true);
+                DBManager.WriteMove(currentPlayer.userName, Int32.Parse(indexes), true);
             }
             if (isHit.Equals("0"))
-                DBManager.WriteMove(currentPlayer.ID, Int32.Parse(indexes), false);
+                DBManager.WriteMove(currentPlayer.userName, Int32.Parse(indexes), false);
 
             changeTurn(isHit, game);
             subsLeft = (otherPlayer.numberOfSubmarines - currentPlayer.numberOfHits).ToString();
@@ -215,8 +225,8 @@ public class GameManager
             if (hasWon)
             {
                 result = new locResult(indexes, "w", isHit, subsLeft); //game over
-                DBManager.AddPlayerData(currentPlayer.ID, true);
-                DBManager.AddPlayerData(otherPlayer.ID, false);
+                DBManager.AddPlayerData(currentPlayer.userName, true);
+                DBManager.AddPlayerData(otherPlayer.userName, false);
             }
             else
                 result = new locResult(indexes, "r", isHit, subsLeft); //game not over
@@ -236,13 +246,13 @@ public class GameManager
         {
             if (arr[i].NumberOfPlayers == 2 && arr[i].Player1.ID.Equals(playerId))
             {
-                result = CalcMakeMove(arr[i].Player1, arr[i].Player2, arr[i], k, l, indexes, 0);
+                result = CalcHit(arr[i].Player1, arr[i].Player2, arr[i], k, l, indexes, 0);
                 break;
             }
 
             if (arr[i].NumberOfPlayers == 2 && arr[i].Player2.ID.Equals(playerId))
             {
-                result = CalcMakeMove(arr[i].Player2, arr[i].Player1, arr[i], k, l, indexes, 1);               
+                result = CalcHit(arr[i].Player2, arr[i].Player1, arr[i], k, l, indexes, 1);               
                 break;
             }
         }
@@ -262,6 +272,32 @@ public class GameManager
         return false;
     }
 
+    public static string getOtherPlayerID(string playerId)
+    {
+        for (int i = 0; i < arr.Count; i++)
+        {
+            if (arr[i] != null && arr[i].Player1 != null && arr[i].Player1.ID.Equals(playerId))
+                if (arr[i].Player2 != null)
+                    return arr[i].Player2.ID;
+
+            if (arr[i] != null && arr[i].Player2 != null && arr[i].Player2.ID.Equals(playerId))
+                if (arr[i].Player1 != null)                
+                    return arr[i].Player1.ID;
+        }
+        return "";
+    }
+
+    public static Game getGameOfPlayer(string playerId)
+    {
+        for (int i = 0; i < arr.Count; i++)
+        {
+            if (((arr[i].Player1 != null && arr[i].Player1.ID.Equals(playerId)) || (arr[i].Player2 != null && arr[i].Player2.ID.Equals(playerId)))
+                && arr[i] != null)
+                return arr[i];
+        }
+        return null;
+    }
+
     public static string getNumberOfShips(string playerId, string playerNumber)
     {
         int[][] boardArr = null;
@@ -277,9 +313,14 @@ public class GameManager
                     
                 if (playerNumber.Equals("2"))
                     currentPlayer = arr[i].Player2;
-                    
-                boardArr = currentPlayer.Board.BoardArray;
-                numberOfShips = calculateNumberOfShips(currentPlayer, boardArr);
+                if (currentPlayer.numberOfSubmarines == 0)
+                {
+                    boardArr = currentPlayer.Board.BoardArray;
+                    numberOfShips = calculateNumberOfShips(currentPlayer, boardArr);
+                }
+                else
+                    numberOfShips = currentPlayer.numberOfSubmarines.ToString();
+                break;
             }
 
             if (arr[i].NumberOfPlayers == 1 && arr[i].Player1.ID.Equals(playerId))
@@ -287,6 +328,7 @@ public class GameManager
                 currentPlayer = arr[i].Player1;
                 boardArr = currentPlayer.Board.BoardArray;
                 numberOfShips = calculateNumberOfShips(currentPlayer, boardArr);
+                break;
             }
         }
         return numberOfShips;

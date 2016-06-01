@@ -29,7 +29,7 @@
 <body>
     <form id="form1" runat="server">
         <div  style="text-align: center; font-size: large;" >
-            Choose of the following options:
+            Choose one of the following options:
     
         <br />
 
@@ -48,7 +48,14 @@
                 </td>
             </tr>
             <tr>
-                <td class="auto-style4">&nbsp;</td>
+                <td class="auto-style4">
+                    <asp:HyperLink ID="HyperLink3" runat="server" NavigateUrl="http://localhost:54968/Admin/AdminPlayersMoves.aspx" style="font-size: large">View Players Moves</asp:HyperLink>
+                </td>
+            </tr>
+            <tr>
+                <td class="auto-style4">
+                    <asp:HyperLink ID="HyperLink4" runat="server" NavigateUrl="http://localhost:54968/Admin/AdminStatistics.aspx" style="font-size: large">View Statistics</asp:HyperLink>
+                </td>
             </tr>
         </table>
         <uc1:ThemesUC runat="server" ID="ThemesUC" />

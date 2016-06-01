@@ -23,7 +23,7 @@
         </span><br />
         <br />
     </div>
-    <asp:GridView ID="GridView1" runat="server" AllowPaging="True" AutoGenerateColumns="False" DataSourceID="BoardsDS" AllowSorting="True" DataKeyNames="Board_ID" OnRowDeleting="GridView1_RowDeleting" Style="margin-right: 0px; text-align: center;" CellPadding="4" ForeColor="Black" GridLines="Vertical" BackColor="White" BorderColor="#DEDFDE" BorderStyle="None" BorderWidth="1px" Height="123px" Width="1294px">
+    <asp:GridView ID="GridView1" runat="server" AllowPaging="True" AutoGenerateColumns="False" DataSourceID="BoardsDS" AllowSorting="True" DataKeyNames="Board_ID" OnRowDeleting="GridView1_RowDeleting" Style="margin-right: 0px; text-align: center;" CellPadding="4" ForeColor="Black" GridLines="Vertical" BackColor="White" BorderColor="#DEDFDE" BorderStyle="None" BorderWidth="1px" Height="123px" Width="1294px" OnSelectedIndexChanged="GridView1_SelectedIndexChanged">
         <AlternatingRowStyle BackColor="White" />
         <Columns>
             <asp:BoundField DataField="Board_ID" HeaderText="Board_ID" SortExpression="Board_ID" />

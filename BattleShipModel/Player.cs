@@ -19,6 +19,8 @@ namespace BattleShipModel
 
         public Board Board { get; set; }
 
+        public string userName { get; set; }
+
         public string ID { get; set; }
 
     }

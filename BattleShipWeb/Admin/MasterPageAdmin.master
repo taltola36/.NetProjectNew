@@ -57,6 +57,16 @@
                 <asp:HyperLink ID="HyperLink3" runat="server" NavigateUrl="http://localhost:54968/Admin/AdminLogout.aspx" CssClass="auto-style3">logout</asp:HyperLink>
             </td>
         </tr>
+        <tr>
+            <td class="auto-style4">
+                <asp:HyperLink ID="HyperLink4" runat="server" NavigateUrl="http://localhost:54968/Admin/AdminPlayersMoves.aspx" CssClass="auto-style3">View Players Moves</asp:HyperLink>
+            </td>
+        </tr>
+         <tr>
+            <td class="auto-style4">
+                <asp:HyperLink ID="HyperLink5" runat="server" NavigateUrl="http://localhost:54968/Admin/AdminStatistics.aspx" CssClass="auto-style3">View Statistics</asp:HyperLink>
+            </td>
+        </tr>
     </table>
     <form id="form1" runat="server">
         <div>

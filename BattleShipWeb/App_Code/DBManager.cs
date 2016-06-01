@@ -95,6 +95,7 @@ public class DBManager
                 playerExist = true;
             }
         }
+        con.Close();
         int numOfVictories = 0;
         int numOfGames = 0;
 
@@ -116,11 +117,14 @@ public class DBManager
                     numOfVictories++;
                 }
             }
+            con.Close();
+
             sql = "Update Player Set Number_Of_Games="+ numOfGames + " , Number_Of_Victories=" + numOfVictories + " where UserName='" + player + "'";
             con.Open();
 
             cmd = new SqlCommand(sql, con);
             dr = cmd.ExecuteReader();
+            con.Close();
         }
         else // add new player
         {
@@ -128,11 +132,13 @@ public class DBManager
             {
                 numOfVictories = 1;
             }
-            sql = "Insert Into Player(Number_Of_Games, Number_Of_Victories) values(1" + numOfVictories + "')";
+            sql = "Insert Into Player(UserName, Number_Of_Games, Number_Of_Victories) values('"+ player +"', 1," + numOfVictories + ")";
             con.Open();
 
             cmd = new SqlCommand(sql, con);
             dr = cmd.ExecuteReader();
+            con.Close();
+
         }
     }
 }
