@@ -10,12 +10,14 @@ public class BoardData
     public string numberOfSubmarinesLeft;
     public string numberOfAllSubmarines;
     public bool wait = true;
+    public int firstToBegin;
 
-    public BoardData(int[][] boardArr, string numberOfSubmarinesLeft, string numberOfAllSubmarines, bool wait)
+    public BoardData(int[][] boardArr, string numberOfSubmarinesLeft, string numberOfAllSubmarines, bool wait, int firstToBegin)
 	{
 		this.boardArr = boardArr;
         this.numberOfSubmarinesLeft = numberOfSubmarinesLeft;
         this.numberOfAllSubmarines = numberOfAllSubmarines;
         this.wait = wait;
+        this.firstToBegin = firstToBegin;
 	}
 }

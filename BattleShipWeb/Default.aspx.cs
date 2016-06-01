@@ -18,6 +18,16 @@ public partial class _Default : System.Web.UI.Page
 
         if (!IsPostBack)
         {
+            if (Session["refreshed"] == null && Session["UserName2"] == null)
+            {
+                Session["refreshed"] = new Object();
+                Response.Redirect("http://localhost:54968/LoginPage.aspx");
+            }
+            else
+                Session["refreshed"] = null;
+            
+            Session["UserName2"] = null;
+            SetButton("Leave the game", "leaveButton", 20, 5);
             SetLabel("Battleship Game", "battleshipGameLabel", 0, 5);
             SetLabel(Session["UserName"].ToString(), "playerNameLabel", 0, 980);
             SetLabel("", "playerNameLabel", 0, 980);
@@ -57,10 +67,11 @@ public partial class _Default : System.Web.UI.Page
         }
     }
 
-    protected void SetButton(string text, int top, int left)
+    protected void SetButton(string text, string id, int top, int left)
     {
         Button myButton = new Button();
         myButton.Text = text;
+        myButton.ID = id;
         myButton.Style.Add("width", "5");
         myButton.Style.Add("height", "5");
         myButton.Style.Add("font-style", "david");
@@ -68,7 +79,7 @@ public partial class _Default : System.Web.UI.Page
         myButton.Style.Add("top", top.ToString() + "px");
         myButton.Style.Add("left", left.ToString() + "px");
         form1.Controls.Add(myButton);
-        myButton.Attributes.Add("onclick", "newGameClick();return false");
+        myButton.Attributes.Add("onclick", "leaveGameClick();return false");
     }
 
     protected void SetLabel(string text, string id, int top, int left)

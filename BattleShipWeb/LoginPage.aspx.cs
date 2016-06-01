@@ -12,14 +12,14 @@ public partial class Admin : System.Web.UI.Page
 
     protected void Page_Load(object sender, EventArgs e)
     {
-        if (Session["UserToken"] != null)
+        if (Session["UserToken"] != null && Session["refreshed"] == null)
             Response.Redirect("http://localhost:54968/Default.aspx");
     }
 
     protected void Button_Login_Click(object sender, EventArgs e)
     {
         Session["UserName"] = TextBoxUserName.Text;
-
+        Session["UserName2"] = TextBoxUserName.Text;
         Session["UserToken"] = Guid.NewGuid().ToString();
 
         string url = "http://localhost:54968/Default.aspx";
